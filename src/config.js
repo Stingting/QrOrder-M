@@ -1,7 +1,7 @@
 const config = {
   domain: 'http://xxx',
   redirectUrl: 'http://xxx/login?redirect_url=',
-  appName: 'QrOrder',
+  appName: 'QrOrder-M',
   appVision: '0.1',
   appAuthor: 'christine',
   email: '1570010150@qq.com',
