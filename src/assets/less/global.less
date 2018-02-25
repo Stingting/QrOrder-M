@@ -11,10 +11,14 @@
   text-align: center;
 }
 .menu {
-  font-size: 30px;
+  font-size: 20px;
   padding-bottom: 0;
 }
-
+.menu-text {
+  margin-top: -16px;
+  //margin-right: 8px;
+  line-height: 20px;
+}
 /*菜单栏右上角数字样式*/
 sup{
   background: red;
@@ -23,5 +27,22 @@ sup{
   padding: 0px 6px; /*左右边距*/
   top: -1em; /*数字离图片右上角的高度*/
   left:-1em;
+}
+
+.top-banner {
+  height: 40px;
+  line-height: 40px;
+  color: rgba(65,68,66,0.79);
+  background-color: #f0f0f5;
+  position: fixed;
+  width: 100%;
+  z-index: 5;
+  font-size: 18px;
+  padding-left: 10px;
+}
+
+//设置Modal弹框高度
+.ant-modal-content{
+  height: 100%;
 }
 

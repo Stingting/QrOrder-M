@@ -1,9 +1,17 @@
 import React from 'react';
-import { connect } from 'dva';
+import {connect} from 'dva';
 import styles from './IndexPage.css';
-import MenuBanner from '../components/common/MenuBanner';
+import {getSessionStorage} from "../utils/helper";
 
-function IndexPage() {
+function IndexPage({history}) {
+  const token = getSessionStorage("token");
+  if (token===undefined || token===null || token==='') {
+    //跳转到登录页面
+    history.push("/app/v1/login");
+  } else {
+    //跳转到首页
+    history.push("/app/v1/mportal");
+  }
   return (
     <div className={styles.normal}>
      {/* <h1 className={styles.title}>Yay! Welcome to dva!</h1>
