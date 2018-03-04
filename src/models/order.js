@@ -1,4 +1,4 @@
-import {getOrderList} from '../services/merchant';
+import {getOrderList, updateOrder, updateOrderStatus} from '../services/merchant';
 import {getSessionStorage} from "../utils/helper";
 
 export default {
@@ -10,7 +10,9 @@ export default {
       totalPrice:0,
       totalCount:0,
       orderList:[],
-      loading:false
+      loading:false,
+      orderData:{},
+      visible:false
   },
 
   subscriptions: {
@@ -34,12 +36,44 @@ export default {
           yield put({
             type:'showOrderList',
             orderList:data.data.list,
-            totalPerson:data.totalPerson,
-            totalPrice:data.totalPrice,
-            totalCount:data.totalCount,
+            totalPerson:data.data.totalPerson,
+            totalPrice:data.data.totalPrice,
+            totalCount:data.data.totalCount,
           })
         }
     },
+    *updateOrder({orderData}, {call, put}) {
+        const params = {
+          id:getSessionStorage("merchantId"),
+          tableId:orderData.tableId,
+          orderId:orderData.id,
+          personNum:orderData.personNum,
+          status : orderData.status
+        };
+        const {data} = yield call(updateOrder,params);
+        if(data) {
+          if(data.isOk) {
+            //关闭窗口
+            yield put({type:'closeDialog'});
+            //刷新订单列表
+            yield put({type:'getOrderList'})
+          }
+        }
+    },
+    *updateOrderStatus({orderId,status}, {call, put}) {
+      const params = {
+        id:getSessionStorage("merchantId"),
+        orderId:orderId,
+        status: status
+      };
+      const {data} = yield call(updateOrderStatus,params);
+      if(data) {
+        if(data.isOk) {
+          //刷新订单列表
+          yield put({type:'getOrderList'});
+        }
+      }
+    }
   },
 
   reducers: {
@@ -54,6 +88,15 @@ export default {
       state.loading=false;
       return {...state, ...payload};
     },
+    closeDialog(state,payload) {
+      state.visible = false;
+      return {...state, ...payload};
+    },
+    toUpdateOrder(state, payload) {
+      state.visible = true;
+      state.orderData = payload.orderData;
+      return {...state, ...payload};
+    }
   },
 
 };

@@ -44,6 +44,40 @@ export function getOrderList(merchantId) {
   });
 }
 
+
+/**
+ * 修改订单信息
+ * @param params
+ * @returns {Object}
+ */
+export function updateOrder(params) {
+  return request(`/v1/order/${params.id}/${params.orderId}`, {
+    method:'PUT',
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+      authorization:getSessionStorage("token")
+    },
+    body:qs.stringify(params)
+  });
+}
+
+
+/**
+ * 修改订单状态
+ * @param params
+ * @returns {Object}
+ */
+export function updateOrderStatus(params) {
+  return request(`/v1/order/${params.id}/status/${params.orderId}`, {
+    method:'PUT',
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+      authorization:getSessionStorage("token")
+    },
+    body:qs.stringify(params)
+  });
+}
+
 /**
  * 获取客户列表信息
  * @param merchantId
@@ -248,14 +282,63 @@ export function getChatRecord(merchantId, tableNum) {
  */
 export function uploadFile(params) {
   let formData = new FormData();
+  formData.append("file",params.file);
   formData.append("userId", params.userId);
-  formData.append("file", params.file);
+  const obj = {
+    userId:2
+  }
+  params.userId = 2;
   return request('/v1/upload', {
-    method:'post',
+    method:'OPTIONS',
     headers:{
-      authorization: getSessionStorage("token"),
-      "Content-Type": "multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW",
+      authorization: getSessionStorage("token")
     },
     body:formData
+  })
+}
+
+
+/**
+ * 获取分类列表
+ * @param merchantId
+ * @returns {Object}
+ */
+export function getClassifyList(merchantId) {
+  return request(`/v1/classify/${merchantId}`, {
+    method:'GET',
+    headers: {
+      authorization:getSessionStorage("token")
+    }
+  })
+}
+
+/**
+ * 添加分类
+ * @param params
+ * @returns {Object}
+ */
+export function addClassify(params) {
+  return request(`/v1/classify/${params.id}`, {
+    method:'POST',
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+      authorization:getSessionStorage("token")
+    },
+    body:qs.stringify(params)
+  });
+}
+
+/**
+ * 删除分类
+ * @param merchantId
+ * @param classifyId
+ * @returns {Object}
+ */
+export function deleteClassify(merchantId, classifyId) {
+  return request(`/v1/classify/${merchantId}/${classifyId}`, {
+    method:'delete',
+    headers: {
+      authorization:getSessionStorage("token")
+    }
   })
 }

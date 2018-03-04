@@ -1,5 +1,6 @@
 import {getMerchantInfo} from "../services/merchant";
 import {getLocalStorage, getSessionStorage} from "../utils/helper";
+import {routerRedux} from 'dva/router';
 
 export default {
 
@@ -44,6 +45,9 @@ export default {
           unReadMsg: data.data.unReadMsg
         });
       }
+    },
+    *backToPortal({payload}, {call,put,select}) {
+      yield put(routerRedux.goBack());
     },
   },
 

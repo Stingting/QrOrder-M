@@ -1,13 +1,30 @@
 import React from 'react';
-import {Avatar, List} from 'antd';
+import {Avatar, List,Button,Modal} from 'antd';
+import {updateOrder} from "../../services/merchant";
+import EditOrder from './EditOrder';
+import moment from 'moment';
+import styles from './OrderList.less';
 
-const OrderList = ({loading,orderList,totalPerson,totalPrice,totalCount}) => {
+const OrderList = ({loading,orderList,totalPerson,totalPrice,totalCount,orderData,visible,
+                     toUpdateOrder,updateOrder,updateOrderStatus,closeDialog}) => {
+
+  const action = (status,orderId,data) =>{
+    const sureStatus  = 3;
+    const finishStatus = 4;
+    switch (status) {
+      case 0: return '';
+      case 1: return  <Button type="primary" onClick={() => toUpdateOrder(data)}>修改</Button> ;
+      case 2: return  <Button type="danger" onClick={() => updateOrderStatus(orderId,sureStatus)}>确认收款</Button> ;
+      case 3: return  <Button type="danger" onClick={() => updateOrderStatus(orderId,finishStatus)}>确认完成</Button> ;
+      case 4: return '';
+    }
+  };
   return (
-    <div>
-      <div style={{textAlign:'center',paddingTop:40,fontSize:16,fontWeight:'bold'}}>
+    <div className={styles['order-list']}>
+      <div className={styles.head}>
         总金额:&yen;{totalPrice} 总单数:{totalCount} 服务人数：{totalPerson}
       </div>
-      <div style={{height:400,overflowY:'auto'}}>
+      <div className={styles.content}>
         <List
           bordered
           split={true}
@@ -16,12 +33,12 @@ const OrderList = ({loading,orderList,totalPerson,totalPrice,totalCount}) => {
           dataSource={orderList}
           size="middle"
           renderItem={item => (
-            <List.Item>
+            <List.Item actions={[action(item.status,item.id,item)]}>
               <List.Item.Meta
                 title={<div style={{fontSize:12, fontWeight:'bold'}}>桌号：{item.tableName}&nbsp;人数：{item.personNum}人</div>}
                 description={
                   <div style={{fontSize:10}}>
-                    <div>下单时间：{item.time}</div>
+                    <div>下单时间：{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}</div>
                     <div>总价：&yen;{item.price}</div>
                   </div>
                 }
@@ -43,6 +60,20 @@ const OrderList = ({loading,orderList,totalPerson,totalPrice,totalCount}) => {
           )}
         />
       </div>
+
+      <Modal
+        style={{margin: 0, top: 0,height:"100%"}}
+        width="100%"
+        title="修改订单"
+        visible={visible}
+        mask={true}
+        maskStyle={{backgroundColor: 'rgba(232,230,225,0.5)'}}
+        footer={null}
+        onOk={() => closeDialog(true)}
+        onCancel={() => closeDialog(true)}>
+        <EditOrder updateOrder={updateOrder} orderData={orderData}/>
+      </Modal>
+
     </div>
   );
 };

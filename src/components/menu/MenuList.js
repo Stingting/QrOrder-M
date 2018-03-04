@@ -2,10 +2,11 @@ import React from 'react';
 import {List,Avatar,Button,Modal} from 'antd';
 import EditFood from './EditFood';
 
-const MenuList = ({menuList, loading,getMenuDetail,visible,food,closeDialog,saveFood,file,changeFile,uploadFile,deleteFood}) => {
+const MenuList = ({menuList, loading,getMenuDetail,visible,food,
+                    closeDialog,saveFood,file,uploadLoading,changeFile,uploadFile,deleteFood}) => {
   return (
     <div>
-      <div style={{paddingTop:'30px',height:400,overflowY:'auto'}}>
+      <div style={{paddingTop:'40px',height:400,overflowY:'auto'}}>
         <List
           bordered
           split={true}
@@ -44,7 +45,15 @@ const MenuList = ({menuList, loading,getMenuDetail,visible,food,closeDialog,save
         footer={null}
         onOk={() => closeDialog(true)}
         onCancel={() => closeDialog(true)}>
-        <EditFood food={food} saveFood={saveFood} file={file} changeFile={changeFile} uploadFile={uploadFile} deleteFood={deleteFood}/>
+        <EditFood
+          food={food}
+          saveFood={saveFood}
+          file={file}
+          uploadLoading={uploadLoading}
+          changeFile={changeFile}
+          uploadFile={uploadFile}
+          deleteFood={deleteFood}
+        />
       </Modal>
 
     </div>

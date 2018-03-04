@@ -2,6 +2,7 @@ import React from 'react';
 import {connect} from 'dva';
 import TableList from '../components/table/TableList';
 import styles from '../assets/less/global.less';
+import {Icon} from 'antd';
 
 function TablePage({dispatch,history,dining}) {
 
@@ -48,9 +49,17 @@ function TablePage({dispatch,history,dining}) {
     })
   }
 
+  /**
+   * 返回首页
+   */
+  function backToPortal() {
+    dispatch({
+      type:'portal/backToPortal'
+    })
+  }
   return (
     <div>
-      <div className={styles["top-banner"]}>餐桌</div>
+      <div className={styles["top-banner"]} onClick={backToPortal}><Icon type="left"/>餐桌</div>
       <TableList {...tableListProps}
             editTable={editTable}
             closeDialog={closeDialog}

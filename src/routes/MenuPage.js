@@ -2,6 +2,7 @@ import React from 'react';
 import {connect} from 'dva';
 import MainLayout from '../components/common/MainLayout';
 import MenuList from '../components/menu/MenuList';
+import styles from '../assets/less/global.less';
 
 import {Layout,Button} from 'antd';
 
@@ -9,8 +10,8 @@ const { Header, Content, Footer, Sider} = Layout;
 
 function MenuPage({ dispatch , fetch, location, menu}) {
 
-  const {menuList, loading,visible,food,file} = menu;
-  const menuListProps = {menuList, loading,visible,food};
+  const {menuList, loading,visible,food,file,uploadLoading} = menu;
+  const menuListProps = {menuList, loading,visible,food,file,uploadLoading};
 
   /**
    * 获取食物详情
@@ -72,8 +73,10 @@ function MenuPage({ dispatch , fetch, location, menu}) {
       foodId:foodId
     })
   }
+
  return (
     <MainLayout>
+      <div className={styles["top-banner"]}>菜谱</div>
       <MenuList {...menuListProps}
                 getMenuDetail={getMenuDetail}
                 closeDialog={closeDialog}
