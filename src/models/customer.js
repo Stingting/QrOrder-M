@@ -30,7 +30,7 @@ export default {
         yield put({type:'hideLoading'});
         yield put({
           type:'showCustomerList',
-          customerList:data.data
+          customerList:data.data!=null?data.data:[]
         })
       }
     },
