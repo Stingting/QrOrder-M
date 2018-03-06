@@ -1,6 +1,6 @@
 import request from '../utils/request';
 import qs from 'qs';
-import {getLocalStorage, getSessionStorage} from "../utils/helper";
+import {getLocalStorage, getSessionStorage, isObject} from "../utils/helper";
 /**
  * 登录
  * @param params
@@ -175,7 +175,13 @@ export function deleteFood(foodId, merchantId) {
  * @returns {Object}
  */
 export function getTableList(merchantId,status) {
-  return request(`/v1/table/${merchantId}/status/${status}`, {
+  let url ='';
+  if(isObject(status)) {
+    url=`/v1/table/${merchantId}/status/${status}`;
+  } else {
+    url = `/v1/table/${merchantId}`;
+  }
+  return request(url, {
     method:'GET',
     headers: {
       authorization:getSessionStorage("token")
@@ -267,9 +273,9 @@ export function getChatRoomInfo(merchantId, tableNum) {
  * @returns {Object}
  */
 export function getChatRecord(merchantId, tableNum) {
-  return request(`/v1/customer/chatRecord/${merchantId}/${tableNum}`, {
-    method:'GET',
-    headers: {
+  return request(`/v1/chat/${merchantId}/table/${tableNum}`, {
+    method:'get',
+    headers:{
       authorization:getSessionStorage("token")
     }
   })

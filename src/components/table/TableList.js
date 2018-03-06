@@ -3,6 +3,19 @@ import {List,Badge,Icon,Popconfirm,Button,Modal} from 'antd';
 import EditTable from './EditTable';
 
 const TableList = ({tableList,loading,editTable,deleteTable,visible,table,closeDialog,saveTable}) => {
+  function getActions(status,id) {
+    if(status===1) {
+      return [<a onClick={() => editTable(id)}><Icon type="edit" title="修改"/></a>,
+             <Popconfirm placement="top" title="确定要删除吗" onConfirm={() => deleteTable(id)} okText="确定"
+                    cancelText="取消">
+                  <a><Icon type="delete" title="删除"/></a>
+             </Popconfirm>];
+    } else if(status ===2) {
+      return [<a onClick={() => editTable(id)}><Icon type="edit" title="修改"/></a>];
+    } else {
+      return '';
+    }
+  }
   return (
     <div>
       <div style={{paddingTop: '60px', backgroundColor: 'rgb(249, 247, 247)',height:500, overflowY: 'auto'}}>
@@ -15,11 +28,7 @@ const TableList = ({tableList,loading,editTable,deleteTable,visible,table,closeD
           size="middle"
           renderItem={item => (
             <List.Item style={{borderBottom: 0, marginBottom: 16, backgroundColor: 'white'}}
-                       actions={[<a onClick={() => editTable(item.id)}><Icon type="edit" title="修改"/></a>,
-                         <Popconfirm placement="top" title="确定要删除吗" onConfirm={() => deleteTable(item.id)} okText="确定"
-                                     cancelText="取消">
-                           <a><Icon type="delete" title="删除"/></a>
-                         </Popconfirm>]}>
+                       actions={getActions(item.status,item.id)}>
               <List.Item.Meta
                 title={<Badge count={5} offset={[-18, -2]}><p>{item.name}&nbsp;&nbsp;用餐人数：{item.personNum}</p></Badge>}
                 description={

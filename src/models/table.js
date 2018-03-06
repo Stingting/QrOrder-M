@@ -7,7 +7,7 @@ export default {
 
   state: {
     count:0, //个数
-    tableList:[{capacity:0,id:null,name:'',orderList:[],personNum:0,price:0,status:1,time:''}] ,//餐桌数组,
+    tableList:[] ,//餐桌数组,
     loading:false,
     visible:false,
     table:{},
