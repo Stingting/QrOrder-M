@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './Portal.less';
 import {Link} from 'dva/router';
 import {Icon} from 'antd';
+import {getLocalStorage,isObject} from "../../utils/helper";
 
 const ShowCount = ({count}) => {
     const eatingPath = {
@@ -65,7 +66,7 @@ const ShowCount = ({count}) => {
           <p>今日订单金额</p>
           <div className={styles['circle-eating']}>
               {/*<p><Icon type="pay-circle-o" style={{fontSize:30}} /></p>*/}
-              <p>{count.price}</p>
+              <p>&yen;{count.price}</p>
           </div>
         </div>
         <div className={styles["num-right"]}>
@@ -73,7 +74,7 @@ const ShowCount = ({count}) => {
           <div className={styles['circle-eating']}>
             <Link to={tablePath}>
               {/*<p><Icon type="message" style={{fontSize:30}} /></p>*/}
-              <p>{count.unReadMsg}</p>
+              <p>{isObject(getLocalStorage("tableTotalUnreadCount"))?getLocalStorage("tableTotalUnreadCount"):0}</p>
             </Link>
           </div>
         </div>

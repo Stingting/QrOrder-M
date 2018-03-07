@@ -44,6 +44,20 @@ export function getOrderList(merchantId) {
   });
 }
 
+/**
+ * 获取某张台的订单列表
+ * @param merchantId
+ * @param tableNum
+ * @returns {Object}
+ */
+export function getTableOrderList(merchantId,tableNum) {
+  return request(`/v1/order/${merchantId}/table/${tableNum}`, {
+    method:'get',
+    headers: {
+      authorization:getSessionStorage("token")
+    }
+  })
+}
 
 /**
  * 修改订单信息

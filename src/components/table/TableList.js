@@ -1,6 +1,8 @@
 import React from 'react';
-import {List,Badge,Icon,Popconfirm,Button,Modal} from 'antd';
+import {List,Badge,Icon,Popconfirm,Button,Modal,Dropdown,Menu} from 'antd';
+import {Link} from 'dva/router';
 import EditTable from './EditTable';
+import {getLocalStorage, getSessionStorage} from "../../utils/helper";
 
 const TableList = ({tableList,loading,editTable,deleteTable,visible,table,closeDialog,saveTable}) => {
   function getActions(status,id) {
@@ -16,6 +18,32 @@ const TableList = ({tableList,loading,editTable,deleteTable,visible,table,closeD
       return '';
     }
   }
+
+  //获取餐桌的未读数
+  function getUnreadCount(id) {
+      const count = getLocalStorage(`table/${id}`);
+      return count;
+  }
+
+  function dropDownMenu(id) {
+
+    return <Menu>
+             <Menu.Item key="0">
+                <Link to={{
+                  pathname:`/app/v1/order`,
+                  state:id
+                }}>订单列表</Link>
+             </Menu.Item>
+             <Menu.Item key="1">
+                <Link to={{
+                  pathname:`/app/v1/chat`,
+                  state:id
+                }}>聊天室</Link>
+             </Menu.Item>
+           </Menu>
+
+  };
+
   return (
     <div>
       <div style={{paddingTop: '60px', backgroundColor: 'rgb(249, 247, 247)',height:500, overflowY: 'auto'}}>
@@ -27,10 +55,11 @@ const TableList = ({tableList,loading,editTable,deleteTable,visible,table,closeD
           dataSource={tableList}
           size="middle"
           renderItem={item => (
+            <Dropdown overlay={dropDownMenu(item.id)} trigger={['click']}>
             <List.Item style={{borderBottom: 0, marginBottom: 16, backgroundColor: 'white'}}
                        actions={getActions(item.status,item.id)}>
               <List.Item.Meta
-                title={<Badge count={5} offset={[-18, -2]}><p>{item.name}&nbsp;&nbsp;用餐人数：{item.personNum}</p></Badge>}
+                title={<Badge count={getUnreadCount(item.id)} offset={[-18, -2]}><p>{item.name}&nbsp;&nbsp;用餐人数：{item.personNum}</p></Badge>}
                 description={
                   <div>
                     <div>消费金额：&yen;{item.price}</div>
@@ -57,6 +86,7 @@ const TableList = ({tableList,loading,editTable,deleteTable,visible,table,closeD
                 })()}
               </div>
             </List.Item>
+            </Dropdown>
           )}
         />
       </div>
