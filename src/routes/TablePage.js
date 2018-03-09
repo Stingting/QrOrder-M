@@ -13,7 +13,9 @@ function TablePage({dispatch,history,dining}) {
    * 编辑餐桌
    * @param tableId
    */
-  function editTable(tableId) {
+  function editTable(tableId,e) {
+    e.preventDefault();
+    e.stopPropagation();
     dispatch({
       type:'dining/editTable',
       tableId:tableId
@@ -42,7 +44,9 @@ function TablePage({dispatch,history,dining}) {
   /*
    *删除餐桌
    */
-  function deleteTable(tableId) {
+  function deleteTable(tableId,e) {
+    e.preventDefault();
+    e.stopPropagation(); //阻止冒泡
     dispatch({
       type:'dining/deleteTable',
       tableId:tableId

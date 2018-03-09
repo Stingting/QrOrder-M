@@ -7,13 +7,13 @@ import {getLocalStorage, getSessionStorage} from "../../utils/helper";
 const TableList = ({tableList,loading,editTable,deleteTable,visible,table,closeDialog,saveTable}) => {
   function getActions(status,id) {
     if(status===1) {
-      return [<a onClick={() => editTable(id)}><Icon type="edit" title="修改"/></a>,
-             <Popconfirm placement="top" title="确定要删除吗" onConfirm={() => deleteTable(id)} okText="确定"
+      return [<a onClick={(e) => editTable(id,e)}><Icon type="edit" title="修改"/></a>,
+             <Popconfirm placement="top" title="确定要删除吗" onConfirm={(e) => deleteTable(id,e)} okText="确定"
                     cancelText="取消">
                   <a><Icon type="delete" title="删除"/></a>
              </Popconfirm>];
     } else if(status ===2) {
-      return [<a onClick={() => editTable(id)}><Icon type="edit" title="修改"/></a>];
+      return [<a onClick={(e) => editTable(id,e)}><Icon type="edit" title="修改"/></a>];
     } else {
       return '';
     }
@@ -91,7 +91,7 @@ const TableList = ({tableList,loading,editTable,deleteTable,visible,table,closeD
         />
       </div>
       <div style={{textAlign: 'center', width: '100%', position: 'fixed'}}>
-        <Button type='primary' style={{width: '100%'}} onClick={() => editTable()}>添加</Button>
+        <Button type='primary' style={{width: '100%'}} onClick={(e) => editTable(null,e)}>添加</Button>
       </div>
       <Modal
         style={{margin: 0, top: 0,height:"100%"}}

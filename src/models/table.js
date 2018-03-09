@@ -48,7 +48,7 @@ export default {
        }
     },
     *editTable({tableId}, {call,put}) {
-      if(tableId!=undefined) {
+      if(tableId!=undefined&&tableId!=null) {
         const {data} = yield call(getTableDetail, getSessionStorage("merchantId"), tableId);
         if(data) {
           yield put({
