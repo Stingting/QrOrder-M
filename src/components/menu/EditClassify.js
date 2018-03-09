@@ -68,7 +68,7 @@ const EditClassify = ({dispatch , fetch, location, menu}) => {
             onClick={showInput}
             style={{ background: '#fff', borderStyle: 'dashed' }}
           >
-            <Icon type="plus" /> New Tag
+            <Icon type="plus" />添加分类
           </Tag>
         )}
       </div>

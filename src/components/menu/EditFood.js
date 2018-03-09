@@ -1,6 +1,7 @@
 import React from 'react';
 import {Button, Form, Icon, Input, message, Popconfirm, Select, Upload,InputNumber} from 'antd';
 import EditClassify from './EditClassify';
+import EditType from './EditType';
 
 const Option = Select.Option;
 const FormItem = Form.Item;
@@ -18,7 +19,7 @@ const EditFood = ({form:{getFieldDecorator,validateFields},
    * @param e
    */
   function handleSubmit(e) {
-    e.preventDefault();
+    // e.preventDefault();
     validateFields((err, values) => {
       if (!err) {
         //保存食物
@@ -57,7 +58,7 @@ const EditFood = ({form:{getFieldDecorator,validateFields},
   return (
     <div>
       <div style={{textAlign:'center'}}>
-        <Form onSubmit={(e)=>handleSubmit(e)} className="login-form">
+        <Form  className="login-form">
           <FormItem label="食物名：" {...formItemLayout}>
             {getFieldDecorator('name', {
               initialValue:food.name
@@ -69,11 +70,7 @@ const EditFood = ({form:{getFieldDecorator,validateFields},
              <EditClassify/>
           </FormItem>
           <FormItem label="规格：" {...formItemLayout}>
-            {getFieldDecorator('type', {
-              initialValue:food.type
-            })(
-              <Input/>
-            )}
+             <EditType/>
           </FormItem>
           <FormItem label="价格：(元)" {...formItemLayout}>
             {getFieldDecorator('price', {
@@ -90,7 +87,7 @@ const EditFood = ({form:{getFieldDecorator,validateFields},
             )}
           </FormItem>
           <FormItem {...formItemLayout} label="图片">
-            {food.pic ? <img src={food.pic} alt="" /> :""}
+            {food.pic ? <img src={food.pic} width={150} height={150} alt="" /> :""}
             <Upload {...uploadProps}>
               <Button>
                 <Icon type="upload" /> 选择图片
@@ -108,7 +105,7 @@ const EditFood = ({form:{getFieldDecorator,validateFields},
             {file?file.fileName:""}
           </FormItem>
           <FormItem>
-            <Button type="primary" htmlType="submit" className="login-form-button" style={{width:'100%'}}>
+            <Button type="primary" onClick={handleSubmit} className="login-form-button" style={{width:'100%'}}>
              保存
             </Button>
           </FormItem>

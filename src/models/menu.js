@@ -19,6 +19,9 @@ export default {
       inputValue:'',
       file:'',//上传的文件
       uploadLoading:false, //上传文件加载
+      foodType:[], //食物规格
+      inputFoodTypeVisible:false,
+      inputFoodTypeValue:''
   },
 
   subscriptions: {
@@ -50,11 +53,16 @@ export default {
     *getMenuDetail({foodId}, {call,put}) {
       if(foodId!=undefined) {
         const {data} = yield call(getMenuDetail, getSessionStorage("merchantId"), foodId);
-        yield put({
-          type: 'showMenuDetail',
-          food: data.data,
-          visible: true
-        })
+        if(data) {
+          let foodType = data.data.type.length>0?data.data.type.split(','):[];
+          yield put({
+            type: 'showMenuDetail',
+            food: data.data,
+            classify: data.data.classify == null ? [] : data.data.classify, //修改时回显菜式类型，
+            foodType:foodType, //这里用foodType , 否则与type关键字冲突
+            visible: true
+          })
+        }
       } else {
         //添加-获取默认食物分类
         const {data} = yield call(getClassifyList,getSessionStorage("merchantId"));
@@ -72,13 +80,17 @@ export default {
         console.log(`foodId=${foodId}`)
         food.foodId=foodId;
         let isOk=false;
+        const c=[];
+        const clas = yield select(state => state.menu.classify);
+        clas.map((v, index) => {
+          c.push(v.id);
+        });
+        food.classifyId = `[${c.join(",")}]`;
+        const foodType =  yield select(state => state.menu.foodType);
+        if(foodType.length>0) {
+          food.type =foodType.join(",");
+        }
         if (foodId===null||foodId==undefined||foodId=='') {
-          const c=[];
-          const clas = yield select(state => state.menu.classify);
-          clas.map((v, index) => {
-            c.push(v.id);
-          });
-          food.classifyId = `[${c.join(",")}]`;
           const {data} = yield call(saveFood, food);
           isOk=data.isOk;
         } else {
@@ -185,7 +197,11 @@ export default {
       return {...state, ...payload};
     },
     showInput(state,payload) {
-      state.inputValue = payload.inputValue;
+      state.inputVisible = payload.inputVisible;
+      return {...state, ...payload};
+    },
+    showFoodTypeInput(state, payload) {
+      state.inputFoodTypeVisible = payload.inputFoodTypeVisible;
       return {...state, ...payload};
     },
     refreshClassify(state,payload) {
@@ -194,6 +210,20 @@ export default {
     showInputValue(state, payload) {
       state.inputValue = payload;
       return {...state, ...payload}
+    },
+    showInputFoodTypeValue(state,paylod) {
+      state.inputFoodTypeValue = paylod.inputFoodTypeValue;
+      return {...state, ...paylod};
+    },
+    deleteFoodType(state,payload) {
+      state.foodType = payload.curType;
+      return {...state, ...payload};
+    },
+    addFoodType(state,payload) {
+      state.foodType.push(payload.name);
+      state.inputFoodTypeValue=payload.inputFoodTypeValue;
+      state.inputFoodTypeVisible=payload.inputFoodTypeVisible;
+      return {...state, ...payload};
     }
   },
 
