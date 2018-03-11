@@ -17,7 +17,7 @@ const MenuList = ({menuList, loading,getMenuDetail,visible,food,
           renderItem={item => (
             <List.Item onClick={()=>getMenuDetail(item.id)}>
               <List.Item.Meta
-                avatar={<Avatar src={item.pic} size="large"/>}
+                avatar={<img width={100} height={100} src={item.pic} alt={item.name}/>}
                 title={<p>{item.name}&nbsp;&nbsp;类型：{item.type}</p>}
                 description={
                   <div>

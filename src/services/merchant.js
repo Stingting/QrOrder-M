@@ -272,12 +272,12 @@ export function updateTable(params) {
  * @returns {Object}
  */
 export function getChatRoomInfo(merchantId, tableNum) {
-   return request(`/v1/customer/chatRoom/${merchantId}/${tableNum}`, {
-     method: 'GET',
-     headers: {
-       authorization:getSessionStorage("token")
-     }
-   })
+  return request(`/v1/table/${merchantId}/${tableNum}`, {
+    method: 'get',
+    headers:{
+      authorization:getSessionStorage("token")
+    }
+  })
 }
 
 /**

@@ -9,7 +9,7 @@ import pathToRegexp from 'path-to-regexp';
 
 const openNotification = (msg) => {
   notification.open({
-    message: 'Notification Title',
+    message: '订单消息',
     description: <div>{msg.content}</div>,
     icon: <Icon type="smile-circle" style={{ color: '#108ee9' }} />,
   });
@@ -29,7 +29,9 @@ export default {
     words:['你好！', '迟点给你答复'],//常用短语
     sendMessages:[],
     sendContent:'', //发送的消息
-    visible:false
+    visible:false,
+    orderMessages:[] ,//新的订单消息，
+    orderModalVisible:false
   },
 
   subscriptions: {
@@ -41,7 +43,7 @@ export default {
           //当前聊天桌号
           curTableNum = state;
           //获取聊天室信息
-          // dispatch({type: 'getChatRoomInfo'});
+          dispatch({type: 'getChatRoomInfo'});
           //获取聊天记录
           dispatch({type: 'getChatRecord', tableNum:curTableNum});
           //进入聊天页面时清空当前桌的未读条数及减少总的未读数
@@ -51,11 +53,15 @@ export default {
           setLocalStorage("tableTotalUnreadCount",tableTotalUnreadCount-count);
         }
         mqttClient.getInstance().on('connect', function () {
-          //商家订阅本店所有台的信息
+          //商家订阅本店所有台的聊天室信息
           const topic = `orderSystem/${getSessionStorage("merchantId")}/+/chat`;
+          //商家订阅本店所有台的订单信息
+          const orderTopic =`orderSystem/${getSessionStorage("merchantId")}/+/order`;
           console.log("connect to emqtt...");
-          console.log(`订阅的主题：${topic}`);
           mqttClient.getInstance().subscribe(topic);
+          mqttClient.getInstance().subscribe(orderTopic);
+          console.log(`订阅的聊天室主题：${topic}`);
+          console.log(`订阅的订单主题：${orderTopic}`);
           mqttClient.getInstance().on('message', function (topic, message) {
 
             const match = pathToRegexp(`orderSystem/${getSessionStorage('merchantId')}/:tableNum/chat`).exec(topic);
@@ -84,6 +90,19 @@ export default {
               setLocalStorage("tableTotalUnreadCount", tableTotalUnreadCount);
             }
 
+            //获取订单信息
+            const orderTopicMatch = pathToRegexp(`orderSystem/${getSessionStorage('merchantId')}/:tableNum/order`).exec(orderTopic);
+            if(match) {
+              //设置新的订单信息
+              dispatch({type:'setOrderMessage', orderMsg:message.toString()});
+              //弹出新订单信息框
+              // dispatch({type:'openOrderNotification'});
+              dispatch({
+                type:'showOrderDialog',
+                orderModalVisible:true
+              })
+            }
+
           });
         });
 
@@ -104,10 +123,8 @@ export default {
       const {data} = yield call(getChatRoomInfo, getSessionStorage("merchantId"), getSessionStorage("tableNum"));
       yield put({
         type: 'showChatRoomInfo' ,
-        count : data.count,
-        num: data.num,
-        remark:data.remark,
-        words:data.words
+        count : data.data.personNum,
+        num: data.data.id
       });
     },
     *getChatRecord({tableNum}, {call,put}) {
@@ -166,6 +183,13 @@ export default {
       }
       return{...state, ...payload}
     },
+    setOrderMessage(state, payload) {
+      const msg = JSON.parse(payload.orderMsg);
+      if(msg) {
+        state.orderMessages.push(msg.data);
+      }
+      return{...state, ...payload}
+    },
     refreshChatMsg(state,payload) {
       const records = payload.chatRecords;
       state.sendMessages=[];
@@ -177,6 +201,17 @@ export default {
     handleVisibleChange(state,payload) {
       state.visible = payload.visible;
       return{...state, ...payload}
+    },
+    openOrderNotification(state,payload) {
+      openNotification(state.orderMessages);
+      return{...state, ...payload};
+    },
+    closeOrderDialog(state,payload) {
+      state.orderModalVisible = false;
+      return {...state, ...payload};
+    },
+    showOrderDialog(state,payload) {
+      return {...state, ...payload};
     }
   },
 

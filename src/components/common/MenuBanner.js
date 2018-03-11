@@ -18,21 +18,21 @@ function MenuBanner ({dispatch, navigation}) {
       mode="horizontal"
       onClick={handleClick}
       selectedKeys={[navigation.current]}>
-      <Menu.Item key="portal"> <Icon type="home"  className={styles.menu}/><div className={styles["menu-text"]}>首页</div>
+      <Menu.Item key="portal" style={{width:'20%'}}> <Icon type="home"  className={styles.menu}/><div className={styles["menu-text"]}>首页</div>
         <Link to="/app/v1/mportal"></Link>
       </Menu.Item>
-      <Menu.Item key="menu"> <Icon type="appstore-o"  className={styles.menu}/><div className={styles["menu-text"]}>菜品</div>
+      <Menu.Item key="menu" style={{width:'20%'}}> <Icon type="appstore-o"  className={styles.menu}/><div className={styles["menu-text"]}>菜品</div>
         <Link to="/app/v1/menu"></Link>
       </Menu.Item>
-      <Menu.Item key="order">
-        <Badge count={5000} overflowCount={999} offset={[0,40]}><Icon type="profile" className={styles.menu}/></Badge>
+      <Menu.Item key="order" style={{width:'20%'}}>
+        <Icon type="profile" className={styles.menu}/>
         <div className={styles["menu-text"]}>订单</div>
         <Link to="/app/v1/order"></Link>
       </Menu.Item>
-      <Menu.Item key="customer"> <Icon type="user"  className={styles.menu}/><div className={styles["menu-text"]}>用户</div>
+      <Menu.Item key="customer" style={{width:'20%'}}> <Icon type="user"  className={styles.menu}/><div className={styles["menu-text"]}>用户</div>
         <Link to="/app/v1/customer"></Link>
       </Menu.Item>
-      <Menu.Item key="setting"> <Icon type="setting"  className={styles.menu}/><div className={styles["menu-text"]}>设置</div>
+      <Menu.Item key="setting" style={{width:'20%'}}> <Icon type="setting"  className={styles.menu}/><div className={styles["menu-text"]}>设置</div>
         <Link to="/app/v1/setting"></Link>
       </Menu.Item>
     </Menu>

@@ -33,14 +33,16 @@ const EditTable = ({form:{getFieldDecorator,validateFields},table,saveTable}) =>
         <Form onSubmit={(e)=>handleSubmit(e)} className="login-form">
           <FormItem label="餐桌号：" {...formItemLayout}>
             {getFieldDecorator('name', {
-              initialValue:table.name
+              initialValue:table.name,
+              rules: [{ required: true, message: '请填写餐桌号！' }],
             })(
               <Input disabled={table.id===undefined?false:true}/>
             )}
           </FormItem>
           <FormItem label="容纳人数：" {...formItemLayout}>
             {getFieldDecorator('capacity', {
-              initialValue:table.capacity
+              initialValue:table.capacity,
+              rules: [{ required: true, message: '请填写容纳人数！' }],
             })(
               <Input disabled={table.id===undefined?false:true}/>
             )}

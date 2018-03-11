@@ -61,7 +61,8 @@ const EditFood = ({form:{getFieldDecorator,validateFields},
         <Form  className="login-form">
           <FormItem label="食物名：" {...formItemLayout}>
             {getFieldDecorator('name', {
-              initialValue:food.name
+              initialValue:food.name,
+              rules: [{ required: true, message: '请填写食物名！' }],
             })(
               <Input disabled={food.id===undefined?false:true}/>
             )}
@@ -74,7 +75,8 @@ const EditFood = ({form:{getFieldDecorator,validateFields},
           </FormItem>
           <FormItem label="价格：(元)" {...formItemLayout}>
             {getFieldDecorator('price', {
-              initialValue:food.price==undefined?0:food.price
+              initialValue:food.price==undefined?0:food.price,
+              rules: [{ required: true, message: '请填写价格！' }],
             })(
               <InputNumber min={0} max={100000}/>
             )}

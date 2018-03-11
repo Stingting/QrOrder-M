@@ -7,11 +7,11 @@ import moment from 'moment';
 const ChatContent = ({sendMessages}) => {
   window.addEventListener('scroll', function () {
     var obj = document.getElementById('chatContent');
-    console.log('come?'+ obj.offsetTop - document.body.scrollTop);
+   /* console.log('come?'+ obj.offsetTop - document.body.scrollTop);
     if (obj.offsetTop - document.body.scrollTop <= 0) {
       // obj.style.bottom = '-100px';
       obj.scrollTop = document.body.scrollTop;
-    }
+    }*/
   });
 
   const content = sendMessages.map((item,key) => (
