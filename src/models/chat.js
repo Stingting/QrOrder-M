@@ -1,19 +1,8 @@
-import constant from '../config';
 import mqttClient from '../utils/mqttUtil';
 import {getChatRecord, getChatRoomInfo} from "../services/merchant";
-import {getSessionStorage,setLocalStorage, getLocalStorage,isObject} from "../utils/helper";
-import moment from 'moment';
-import { Button, notification, Icon } from 'antd';
+import {getLocalStorage, getSessionStorage, isObject, setLocalStorage} from "../utils/helper";
 import uuid from 'uuid';
 import pathToRegexp from 'path-to-regexp';
-
-const openNotification = (msg) => {
-  notification.open({
-    message: '订单消息',
-    description: <div>{msg.content}</div>,
-    icon: <Icon type="smile-circle" style={{ color: '#108ee9' }} />,
-  });
-};
 
 let curTableNum=null;
 let topicTableNum=null;
@@ -25,7 +14,7 @@ export default {
   state: {
     count:0, //	人数
     num:0,	//几号桌
-    remark:'',	//备注
+    name:'',	//餐桌名称
     words:['你好！', '迟点给你答复'],//常用短语
     sendMessages:[],
     sendContent:'', //发送的消息
@@ -67,36 +56,37 @@ export default {
             const match = pathToRegexp(`orderSystem/${getSessionStorage('merchantId')}/:tableNum/chat`).exec(topic);
             if (match) {
               topicTableNum = match[match.length - 1];
-            }
-            if (curTableNum === Number(topicTableNum)) {
-              //设置聊天消息
-              dispatch({type:'setChatMessage', chatMsg:message.toString()});
-            } else {
-              //缓存餐桌的未读数
-              let tableUnreadCount = getLocalStorage(`table/${topicTableNum}`);
-              //缓存餐桌的总的未读数
-              let tableTotalUnreadCount = getLocalStorage("tableTotalUnreadCount");
-              if(!isObject(tableUnreadCount)) {
-                tableUnreadCount =1;
-              } else {
-                tableUnreadCount+=1;
-              }
-              if(!isObject(tableTotalUnreadCount)) {
-                tableTotalUnreadCount =1;
-              } else {
-                tableTotalUnreadCount+=1;
-              }
-              setLocalStorage(`table/${topicTableNum}`, tableUnreadCount);
-              setLocalStorage("tableTotalUnreadCount", tableTotalUnreadCount);
-            }
 
+              if (curTableNum === Number(topicTableNum)) {
+                //设置聊天消息
+                dispatch({type: 'setChatMessage', chatMsg: message.toString()});
+              } else {
+                //缓存餐桌的未读数
+                let tableUnreadCount = getLocalStorage(`table/${topicTableNum}`);
+                //缓存餐桌的总的未读数
+                let tableTotalUnreadCount = getLocalStorage("tableTotalUnreadCount");
+                if (!isObject(tableUnreadCount)) {
+                  tableUnreadCount = 1;
+                } else {
+                  tableUnreadCount += 1;
+                }
+                if (!isObject(tableTotalUnreadCount)) {
+                  tableTotalUnreadCount = 1;
+                } else {
+                  tableTotalUnreadCount += 1;
+                }
+                setLocalStorage(`table/${topicTableNum}`, tableUnreadCount);
+                setLocalStorage("tableTotalUnreadCount", tableTotalUnreadCount);
+              }
+
+            }
             //获取订单信息
             const orderTopicMatch = pathToRegexp(`orderSystem/${getSessionStorage('merchantId')}/:tableNum/order`).exec(orderTopic);
-            if(match) {
+            if(orderTopicMatch) {
+              console.log(`收到的订单消息${message.toString()}`)
               //设置新的订单信息
               dispatch({type:'setOrderMessage', orderMsg:message.toString()});
               //弹出新订单信息框
-              // dispatch({type:'openOrderNotification'});
               dispatch({
                 type:'showOrderDialog',
                 orderModalVisible:true
@@ -119,12 +109,13 @@ export default {
   },
 
   effects: {
-    *getChatRoomInfo({ payload }, { call, put }) {  // eslint-disable-line
-      const {data} = yield call(getChatRoomInfo, getSessionStorage("merchantId"), getSessionStorage("tableNum"));
+    *getChatRoomInfo({ payload }, { call, put }) {
+      const {data} = yield call(getChatRoomInfo, getSessionStorage("merchantId"), curTableNum);
       yield put({
         type: 'showChatRoomInfo' ,
         count : data.data.personNum,
-        num: data.data.id
+        num: data.data.id,
+        name:data.data.name
       });
     },
     *getChatRecord({tableNum}, {call,put}) {
@@ -203,7 +194,7 @@ export default {
       return{...state, ...payload}
     },
     openOrderNotification(state,payload) {
-      openNotification(state.orderMessages);
+
       return{...state, ...payload};
     },
     closeOrderDialog(state,payload) {

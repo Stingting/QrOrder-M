@@ -11,8 +11,8 @@ const { Header, Content, Footer, Sider} = Layout;
 
 function ChatPage({ dispatch , fetch, location, chat}) {
 
-  const {num, count, remark,sendContent,sendMessages,words,visible} = chat;
-  const chatHeadProps = {num, count, remark};
+  const {num, count, name,sendContent,sendMessages,words,visible} = chat;
+  const chatHeadProps = {num, count, name};
   const messageInputProps = {sendContent,words,visible};
   const chatContentProps = {sendMessages};
 
