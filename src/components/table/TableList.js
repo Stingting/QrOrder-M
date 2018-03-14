@@ -9,8 +9,8 @@ const TableList = ({tableList,loading,editTable,deleteTable,visible,table,closeD
     if(status===1) {
       return [<a onClick={(e) => editTable(id,e)}><Icon type="edit" title="修改"/></a>,
              <Popconfirm placement="top" title="确定要删除吗" onConfirm={(e) => deleteTable(id,e)} okText="确定"
-                    cancelText="取消">
-                  <a><Icon type="delete" title="删除"/></a>
+                    cancelText="取消" onCancel={(e)=>{ e.stopPropagation();}}>
+                  <a onClick={(e)=>{ e.stopPropagation();}}><Icon type="delete" title="删除"/></a>
              </Popconfirm>];
     } else if(status ===2) {
       return [<a onClick={(e) => editTable(id,e)}><Icon type="edit" title="修改"/></a>];
