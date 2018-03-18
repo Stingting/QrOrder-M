@@ -3,6 +3,7 @@ import MenuBanner from './MenuBanner';
 import {Layout,Modal,Badge} from 'antd';
 import styles from '../../assets/less/global.less';
 import {connect} from "dva";
+import OrderMsg from '../order/OrderMsg';
 
 const { Header, Content, Footer, Sider} = Layout;
 
@@ -11,7 +12,7 @@ function MainLayout({dispatch, children, location,chat}) {
   /**
    * 订单弹框是否可见标识
    */
-  const {orderModalVisible} = chat;
+  const {orderModalVisible,orderMessages} = chat;
 
   /**
    * 关闭订单弹框
@@ -37,7 +38,7 @@ function MainLayout({dispatch, children, location,chat}) {
           footer={null}
           onOk={() => closeOrderDialog(true)}
           onCancel={() => closeOrderDialog(true)}>
-          <p>sssssss</p>
+          <OrderMsg orderMessages={orderMessages}/>
         </Modal>
       </Badge>
     </Layout>
