@@ -1,10 +1,12 @@
 {
   "extraBabelPlugins": [
-     ["import", { "libraryName": "antd", "libraryDirectory": "es", "style": "css" }]
+     ["import", { "libraryName": "antd", "libraryDirectory": "es", "style": true }],
+     ["import", { "libraryName": "antd-mobile","libraryDirectory": "es", "style": true},"antd-mobile-import"]
    ],
 
    "proxy": {
          "/v1": {
+         //"target": "http://wdyn4m.natappfree.cc/v1",
            "target": "http://localhost:8090/v1",
            //"target": "http://rapapi.org/mockjsdata/31420/v1/",
            "changeOrigin": true,
