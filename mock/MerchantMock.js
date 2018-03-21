@@ -1,7 +1,7 @@
 const Mock=require('mockjs');
-module.exports={
+module.exports= {
   //商家端获取首页信息
-  [`POST /v1/home/`](req,res){
+  [`POST /v1/home/`](req, res) {
     const data = Mock.mock({
       "data": [
         {
@@ -24,7 +24,7 @@ module.exports={
   },
 
   // 获取订单列表
-  [`POST /v1/order/`](req,res){
+  [`POST /v1/order/`](req, res) {
     const data = Mock.mock({
       "data": [
         {
@@ -41,5 +41,6 @@ module.exports={
       "totalPrice": "金额"
     });
     res.json(data);
-  },
+  }
+}
 
