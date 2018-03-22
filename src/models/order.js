@@ -16,11 +16,16 @@ export default {
   },
 
   subscriptions: {
-    setup({ dispatch, history }) {  // eslint-disable-line
-      return history.listen(({ pathname,search})=>{
+    setup({ dispatch, history }) {
+      return history.listen(({ pathname,search,params})=>{
         if(pathname.includes("/app/v1/order")) {
+          let tableId=null;
+          if(params) {
+            tableId=params.tableId;
+          }
           dispatch({
-            type:'getOrderList'
+            type:'getOrderList',
+            tableId:tableId
           })
         }
       });
@@ -28,9 +33,9 @@ export default {
   },
 
   effects: {
-    *getOrderList({ payload }, { call, put }) {
+    *getOrderList({ tableId }, { call, put }) {
         yield put({type:'showLoading'});
-        const {data} = yield call(getOrderList,getSessionStorage("merchantId"));
+        const {data} = yield call(getOrderList,getSessionStorage("merchantId"),tableId);
         if(data) {
           yield put({type:'hideLoading'});
           yield put({

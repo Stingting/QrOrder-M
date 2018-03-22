@@ -1,17 +1,22 @@
 import React from 'react';
-import {List,Badge,Icon,Popconfirm,Button,Modal,Dropdown,Menu} from 'antd';
-import {Link} from 'dva/router';
+import {Badge, Icon, List} from 'antd';
+import {Button, Modal, WhiteSpace} from 'antd-mobile';
 import EditTable from './EditTable';
-import {getLocalStorage, getSessionStorage} from "../../utils/helper";
+import {getLocalStorage} from "../../utils/helper";
 
-const TableList = ({tableList,loading,editTable,deleteTable,visible,table,closeDialog,saveTable}) => {
+const operation = Modal.operation;
+const alert = Modal.alert;
+
+const TableList = ({tableList,loading,editTable,deleteTable,visible,table,closeDialog,saveTable,selectedTo}) => {
   function getActions(status,id) {
     if(status===1) {
       return [<a onClick={(e) => editTable(id,e)}><Icon type="edit" title="修改"/></a>,
-             <Popconfirm placement="top" title="确定要删除吗" onConfirm={(e) => deleteTable(id,e)} okText="确定"
-                    cancelText="取消" onCancel={(e)=>{ e.stopPropagation();}}>
-                  <a onClick={(e)=>{ e.stopPropagation();}}><Icon type="delete" title="删除"/></a>
-             </Popconfirm>];
+              <a onClick={(e) =>{
+                e.stopPropagation();
+                alert('删除', '确定删除吗？', [
+                  { text: '取消', onPress: () => console.log('cancel') },
+                  { text: '确定', onPress: () => deleteTable(id,e) },
+                ])}}><Icon type="delete" title="删除"/></a>];
     } else if(status ===2) {
       return [<a onClick={(e) => editTable(id,e)}><Icon type="edit" title="修改"/></a>];
     } else {
@@ -25,25 +30,6 @@ const TableList = ({tableList,loading,editTable,deleteTable,visible,table,closeD
       return count;
   }
 
-  function dropDownMenu(id) {
-
-    return <Menu>
-             <Menu.Item key="0">
-                <Link to={{
-                  pathname:`/app/v1/order`,
-                  state:id
-                }}>订单列表</Link>
-             </Menu.Item>
-             <Menu.Item key="1">
-                <Link to={{
-                  pathname:`/app/v1/chat`,
-                  state:id
-                }}>聊天室</Link>
-             </Menu.Item>
-           </Menu>
-
-  };
-
   return (
     <div>
       <div style={{paddingTop: '60px', backgroundColor: 'rgb(249, 247, 247)',height:500, overflowY: 'auto'}}>
@@ -55,13 +41,17 @@ const TableList = ({tableList,loading,editTable,deleteTable,visible,table,closeD
           dataSource={tableList}
           size="middle"
           renderItem={item => (
-            <Dropdown overlay={dropDownMenu(item.id)} trigger={['click']}>
             <List.Item style={{borderBottom: 0, marginBottom: 16, backgroundColor: 'white'}}
-                       actions={getActions(item.status,item.id)}>
+                       actions={getActions(item.status,item.id)}
+                       onClick={() => operation([
+                         { text: '订单列表', onPress: () => selectedTo(item.id,'order') },
+                         { text: '聊天室', onPress: () => selectedTo(item.id,'chat') },
+                       ])}>
               <List.Item.Meta
-                title={<Badge count={getUnreadCount(item.id)} offset={[-18, -2]}><p>{item.name}&nbsp;&nbsp;用餐人数：{item.personNum}</p></Badge>}
+                title={<Badge count={getUnreadCount(item.id)} offset={[-18, -2]}><p>{item.name}&nbsp;&nbsp;容纳人数：{item.capacity}</p></Badge>}
                 description={
                   <div>
+                    <div>用餐人数：&nbsp;{item.personNum}</div>
                     <div>消费金额：&yen;{item.price}</div>
                   </div>
                 }
@@ -86,23 +76,19 @@ const TableList = ({tableList,loading,editTable,deleteTable,visible,table,closeD
                 })()}
               </div>
             </List.Item>
-            </Dropdown>
           )}
         />
       </div>
       <div style={{textAlign: 'center', width: '100%', position: 'fixed'}}>
-        <Button type='primary' style={{width: '100%'}} onClick={(e) => editTable(null,e)}>添加</Button>
+        <WhiteSpace />
+        <Button type="primary"  size='small' onClick={(e) => editTable(null,e)}>新增</Button>
       </div>
       <Modal
-        style={{margin: 0, top: 0,height:"100%"}}
-        width="100%"
         title="编辑餐桌"
         visible={visible}
-        mask={true}
-        maskStyle={{backgroundColor: 'rgba(232,230,225,0.5)'}}
-        footer={null}
-        onOk={() => closeDialog(true)}
-        onCancel={() => closeDialog(true)}>
+        footer={[]}
+        closable={true}
+        onClose={() => closeDialog(true)}>
         <EditTable saveTable={saveTable} table={table}/>
       </Modal>
     </div>

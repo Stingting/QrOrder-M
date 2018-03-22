@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Form, Icon, Input, message, Popconfirm, Select, Upload,InputNumber} from 'antd';
+import {Button, Form, Icon, Input, InputNumber, message, Select, Upload} from 'antd';
 import EditClassify from './EditClassify';
 import EditType from './EditType';
 
@@ -7,7 +7,7 @@ const Option = Select.Option;
 const FormItem = Form.Item;
 
 const EditFood = ({form:{getFieldDecorator,validateFields},
-                    food,saveFood,file,uploadLoading,changeFile,uploadFile,deleteFood}) => {
+                    food,saveFood,file,uploadLoading,changeFile,uploadFile}) => {
 
   const formItemLayout ={
     labelCol: { span: 4 },
@@ -112,11 +112,6 @@ const EditFood = ({form:{getFieldDecorator,validateFields},
             </Button>
           </FormItem>
         </Form>
-      </div>
-      <div style={{width:'100%', display:food.id===undefined?'none':'inline'}} >
-        <Popconfirm placement="top" title="确定要删除吗" onConfirm={() => deleteFood(food.id)} okText="确定" cancelText="取消">
-          <Button type="danger" style={{width:'100%'}}>删除</Button>
-        </Popconfirm>
       </div>
     </div>
   );

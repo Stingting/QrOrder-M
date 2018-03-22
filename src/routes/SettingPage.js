@@ -2,11 +2,15 @@ import React from 'react';
 import {connect} from 'dva';
 import MainLayout from '../components/common/MainLayout';
 import styles from '../assets/less/global.less';
+import {NavBar} from 'antd-mobile';
 
 function SettingPage({ dispatch , fetch, location, setting}) {
   return (
     <MainLayout>
-      <div className={styles["top-banner"]}>设置</div>
+      <NavBar
+        mode="dark"
+        leftContent="设置" className={styles.navbar}>
+      </NavBar>
     </MainLayout>
   );
 }

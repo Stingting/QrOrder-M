@@ -1,5 +1,6 @@
 import {getTableList, getTableDetail, addTable, updateTable,deleteTable} from "../services/merchant";
 import {getSessionStorage} from "../utils/helper";
+import {routerRedux} from "dva/router";
 
 export default {
 
@@ -88,9 +89,36 @@ export default {
     },
     *deleteTable({tableId}, {call,put}) {
       const {data} = yield call(deleteTable,getSessionStorage("merchantId"),tableId);
-      if(data.isOk) {
+      if(data&&data.isOk) {
         //刷新餐桌列表
         yield put({type:'getTableList'});
+      }
+    },
+    *selectedTo({id,selected}, {call,put}) {
+      if(selected==='order') {
+        //跳转订单页
+        yield put(routerRedux.push({
+            pathname: '/app/v1/order',
+            params: {
+              tableId: id
+            }
+          }));
+        yield put({
+          type:'navigation/setCurrentKey',
+          current: 'order'
+        })
+      } else if(selected==='chat') {
+        //跳转到聊天界面
+        yield put(routerRedux.push({
+            pathname:'/app/v1/chat',
+            params: {
+              tableId:id
+            }
+        }));
+        yield put({
+          type:'navigation/setCurrentKey',
+          current: 'chat'
+        })
       }
     }
   },

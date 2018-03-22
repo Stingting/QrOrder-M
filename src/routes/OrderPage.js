@@ -1,12 +1,9 @@
 import React from 'react';
 import {connect} from 'dva';
-import {Layout, Tabs} from 'antd';
 import MainLayout from "../components/common/MainLayout";
 import OrderList from "../components/order/OrderList";
 import styles from '../assets/less/global.less';
-
-const { Header, Content, Footer, Sider} = Layout;
-const TabPane = Tabs.TabPane;
+import {NavBar} from 'antd-mobile';
 
 function CartPage({ dispatch , fetch, location, order}) {
 
@@ -56,7 +53,10 @@ function CartPage({ dispatch , fetch, location, order}) {
   }
   return (
     <MainLayout>
-       <div className={styles["top-banner"]}>订单</div>
+      <NavBar
+        mode="dark"
+        leftContent="订单" className={styles.navbar}>
+      </NavBar>
        <OrderList {...orderListProps}
                   closeDialog={closeDialog}
                   toUpdateOrder={toUpdateOrder}

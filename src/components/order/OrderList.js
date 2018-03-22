@@ -1,9 +1,9 @@
 import React from 'react';
-import {Avatar, List,Button,Modal} from 'antd';
-import {updateOrder} from "../../services/merchant";
+import {Button, List} from 'antd';
 import EditOrder from './EditOrder';
 import moment from 'moment';
 import styles from './OrderList.less';
+import {Modal} from 'antd-mobile';
 
 const OrderList = ({loading,orderList,totalPerson,totalPrice,totalCount,orderData,visible,
                      toUpdateOrder,updateOrder,updateOrderStatus,closeDialog}) => {
@@ -62,15 +62,11 @@ const OrderList = ({loading,orderList,totalPerson,totalPrice,totalCount,orderDat
       </div>
 
       <Modal
-        style={{margin: 0, top: 0,height:"100%"}}
-        width="100%"
         title="修改订单"
         visible={visible}
-        mask={true}
-        maskStyle={{backgroundColor: 'rgba(232,230,225,0.5)'}}
-        footer={null}
-        onOk={() => closeDialog(true)}
-        onCancel={() => closeDialog(true)}>
+        footer={[]}
+        closable={true}
+        onClose={() => closeDialog(true)}>
         <EditOrder updateOrder={updateOrder} orderData={orderData}/>
       </Modal>
 

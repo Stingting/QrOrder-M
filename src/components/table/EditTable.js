@@ -1,5 +1,6 @@
 import React from 'react';
-import {Button, Form, Input, Select} from 'antd';
+import {Form, Input, Select} from 'antd';
+import {Button} from 'antd-mobile';
 
 const Option = Select.Option;
 const FormItem = Form.Item;
@@ -30,7 +31,7 @@ const EditTable = ({form:{getFieldDecorator,validateFields},table,saveTable}) =>
   return (
     <div>
       <div style={{textAlign:'center'}}>
-        <Form onSubmit={(e)=>handleSubmit(e)} className="login-form">
+        <Form className="login-form">
           <FormItem label="餐桌号：" {...formItemLayout}>
             {getFieldDecorator('name', {
               initialValue:table.name,
@@ -61,9 +62,7 @@ const EditTable = ({form:{getFieldDecorator,validateFields},table,saveTable}) =>
             )}
           </FormItem>
           <FormItem>
-            <Button type="primary" htmlType="submit" className="login-form-button" style={{width:'100%'}}>
-              保存
-            </Button>
+            <Button type="primary"  size='small' onClick={(e)=>handleSubmit(e)}>保存</Button>
           </FormItem>
         </Form>
       </div>

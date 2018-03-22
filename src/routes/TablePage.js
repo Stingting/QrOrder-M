@@ -3,6 +3,7 @@ import {connect} from 'dva';
 import TableList from '../components/table/TableList';
 import styles from '../assets/less/global.less';
 import {Icon} from 'antd';
+import {NavBar} from 'antd-mobile';
 
 function TablePage({dispatch,history,dining}) {
 
@@ -61,14 +62,31 @@ function TablePage({dispatch,history,dining}) {
       type:'portal/backToPortal'
     })
   }
+
+  /**
+   * 选择跳转订单列表或者聊天室
+   */
+  function selectedTo(id, selected) {
+    dispatch({
+      type:'dining/selectedTo',
+      id:id,
+      selected:selected
+    })
+  }
   return (
     <div>
-      <div className={styles["top-banner"]} onClick={backToPortal}><Icon type="left"/>餐桌</div>
+      <NavBar
+        mode="dark"
+        leftContent="餐桌" className={styles.navbar}
+        icon={<Icon type="left" />}
+        onLeftClick={() => backToPortal()}>
+      </NavBar>
       <TableList {...tableListProps}
             editTable={editTable}
             closeDialog={closeDialog}
             saveTable={saveTable}
             deleteTable={deleteTable}
+            selectedTo={selectedTo}
       />
     </div>
   );

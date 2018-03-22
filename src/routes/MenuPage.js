@@ -2,11 +2,8 @@ import React from 'react';
 import {connect} from 'dva';
 import MainLayout from '../components/common/MainLayout';
 import MenuList from '../components/menu/MenuList';
+import {NavBar} from 'antd-mobile';
 import styles from '../assets/less/global.less';
-
-import {Layout,Button} from 'antd';
-
-const { Header, Content, Footer, Sider} = Layout;
 
 function MenuPage({ dispatch , fetch, location, menu}) {
 
@@ -76,7 +73,10 @@ function MenuPage({ dispatch , fetch, location, menu}) {
 
  return (
     <MainLayout>
-      <div className={styles["top-banner"]}>菜谱</div>
+      <NavBar
+        mode="dark"
+        leftContent="菜谱" className={styles.navbar}>
+      </NavBar>
       <MenuList {...menuListProps}
                 getMenuDetail={getMenuDetail}
                 closeDialog={closeDialog}

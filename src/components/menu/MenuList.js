@@ -1,21 +1,59 @@
 import React from 'react';
-import {List,Avatar,Button,Modal} from 'antd';
+import {List} from 'antd';
+import {Button,WhiteSpace,Modal,ActionSheet} from 'antd-mobile';
 import EditFood from './EditFood';
+const alert = Modal.alert;
 
 const MenuList = ({menuList, loading,getMenuDetail,visible,food,
                     closeDialog,saveFood,file,uploadLoading,changeFile,uploadFile,deleteFood}) => {
+
+    // fix touch to scroll background page on iOS
+   // https://github.com/ant-design/ant-design-mobile/issues/307
+  // https://github.com/ant-design/ant-design-mobile/issues/163
+  const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
+  let wrapProps;
+  if (isIPhone) {
+    wrapProps = {
+      onTouchStart: e => e.preventDefault(),
+    };
+  }
+  function showActionSheet (id) {
+    const BUTTONS = ['编辑', '删除', '取消'];
+    ActionSheet.showActionSheetWithOptions({
+        options: BUTTONS,
+        cancelButtonIndex: BUTTONS.length - 1,
+        destructiveButtonIndex: BUTTONS.length - 2,
+        // title: 'title',
+        message: '',
+        maskClosable: true,
+        'data-seed': 'logId',
+        wrapProps,
+      },
+      (buttonIndex) => {
+        const action =BUTTONS[buttonIndex];
+        if(action === '编辑') {
+          getMenuDetail(id);
+        } else if(action === '删除') {
+          alert('删除', '确定删除吗？', [
+            { text: '取消', onPress: () => console.log('cancel') },
+            { text: '确定', onPress: () => deleteFood(id)},
+          ])
+        } else {
+          console.log(`action=${action}`);
+        }
+      });
+  };
   return (
     <div>
-      <div style={{paddingTop:'40px',height:400,overflowY:'auto'}}>
+      <div style={{paddingTop: 45,height:500,overflowY:'auto'}}>
         <List
-          bordered
           split={true}
           loading={loading}
           itemLayout="horizontal"
           dataSource={menuList}
           size="middle"
           renderItem={item => (
-            <List.Item onClick={()=>getMenuDetail(item.id)}>
+            <List.Item onClick={()=>showActionSheet(item.id)}>
               <List.Item.Meta
                 avatar={<img width={100} height={100} src={item.pic} alt={item.name}/>}
                 title={<div><p>{item.name}</p><p>{item.type}</p></div>}
@@ -25,26 +63,23 @@ const MenuList = ({menuList, loading,getMenuDetail,visible,food,
                     <div><span style={{color:'red'}}>&yen;{item.price}</span></div>
                   </div>}
               />
-              <div style={{display: item.num===0?'none':'inline'}}>{item.num}份</div>
+              <div style={{display: item.num===0?'none':'inline'}}>剩余{item.num}份</div>
               <div style={{display: item.num===0?'inline':'none'}}>售馨</div>
             </List.Item>
           )}
         />
       </div>
       <div style={{textAlign:'center', width:'100%'}}>
-        <Button type='primary' style={{width:'100%'}} onClick={()=>getMenuDetail()}>添加</Button>
+        <WhiteSpace />
+        <Button type="primary" size='small' onClick={()=>getMenuDetail()}>新增</Button>
       </div>
 
       <Modal
-        style={{margin:0,top:0}}
-        width="100%"
         title="编辑食物"
         visible={visible}
-        mask={true}
-        maskStyle={{backgroundColor:'rgba(232,230,225,0.5)'}}
-        footer={null}
-        onOk={() => closeDialog(true)}
-        onCancel={() => closeDialog(true)}>
+        footer={[]}
+        closable={true}
+        onClose={() => closeDialog(true)}>
         <EditFood
           food={food}
           saveFood={saveFood}
@@ -52,7 +87,6 @@ const MenuList = ({menuList, loading,getMenuDetail,visible,food,
           uploadLoading={uploadLoading}
           changeFile={changeFile}
           uploadFile={uploadFile}
-          deleteFood={deleteFood}
         />
       </Modal>
 

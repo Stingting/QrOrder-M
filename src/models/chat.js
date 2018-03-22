@@ -24,13 +24,13 @@ export default {
   },
 
   subscriptions: {
-    setup({ dispatch, history }) {  // eslint-disable-line
-      return history.listen(({ pathname,search,state})=>{
+    setup({ dispatch, history }) {
+      return history.listen(({ pathname,search,params})=>{
 
         //进入聊天页面时触发的操作
         if(pathname.includes('/app/v1/chat')) {
           //当前聊天桌号
-          curTableNum = state;
+          curTableNum = params.tableId;
           //获取聊天室信息
           dispatch({type: 'getChatRoomInfo'});
           //获取聊天记录
@@ -83,7 +83,7 @@ export default {
             //获取订单信息
             const orderTopicMatch = pathToRegexp(`orderSystem/${getSessionStorage('merchantId')}/:tableNum/order`).exec(orderTopic);
             if(orderTopicMatch) {
-              console.log(`收到的订单消息${message.toString()}`)
+              console.log(`收到的订单消息${message.toString()}`);
               //设置新的订单信息
               dispatch({type:'setOrderMessage', orderMsg:message.toString()});
               //弹出新订单信息框

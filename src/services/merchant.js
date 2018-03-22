@@ -33,10 +33,17 @@ export function getMerchantInfo(merchantId) {
 /**
  * 获取订单列表
  * @param merchantId
+ * @param tableId
  * @returns {Object}
  */
-export function getOrderList(merchantId) {
-  return request(`/v1/order/${merchantId}`, {
+export function getOrderList(merchantId,tableId) {
+  let path;
+  if(isObject(tableId)) {
+    path=`/v1/order/${merchantId}/table/${tableId}`;
+  } else {
+    path=`/v1/order/${merchantId}`;
+  }
+  return request(path, {
     method:'GET',
     headers: {
       authorization:getSessionStorage("token")
