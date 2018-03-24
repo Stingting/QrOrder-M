@@ -1,5 +1,6 @@
-import {getOrderList, updateOrder, updateOrderStatus} from '../services/merchant';
+import {getOrderList, updateOrder, updateOrderStatus,getOrderDetail} from '../services/merchant';
 import {getSessionStorage} from "../utils/helper";
+import {routerRedux} from 'dva/router';
 
 export default {
 
@@ -12,7 +13,8 @@ export default {
       orderList:[],
       loading:false,
       orderData:{},
-      visible:false
+      visible:false,
+      detail:{}, //订单详情
   },
 
   subscriptions: {
@@ -28,6 +30,18 @@ export default {
             tableId:tableId
           })
         }
+
+        if (pathname.includes('/app/v1/order/orderdetail')) {
+          console.log(`pathname=${pathname}`);
+          /**
+           * 获取订单详情信息
+           */
+          dispatch({
+            type: 'getOrderDetail',
+            orderId: params.orderId
+          })
+        }
+
       });
     }
   },
@@ -61,7 +75,9 @@ export default {
             //关闭窗口
             yield put({type:'closeDialog'});
             //刷新订单列表
-            yield put({type:'getOrderList'})
+            yield put({type:'getOrderList'});
+            //刷新详情（在详情页面进行修改时）
+            yield put({type:'getOrderDetail'});
           }
         }
     },
@@ -76,9 +92,32 @@ export default {
         if(data.isOk) {
           //刷新订单列表
           yield put({type:'getOrderList'});
+          //刷新详情（在详情页面进行修改时）
+          yield put({type:'getOrderDetail'});
         }
       }
-    }
+    },
+    //订单列表跳转订单详情页面
+    *toOrderDetail({orderId},{call,put}) {
+      yield put(routerRedux.push({
+        pathname: '/app/v1/order/orderdetail',
+        params: {
+          orderId: orderId
+        },
+      }));
+    },
+    *getOrderDetail({orderId}, {call,put,select}) {
+      const {data} = yield call (getOrderDetail,getSessionStorage("merchantId"),orderId);
+      if(data) {
+        yield put({
+          type: 'showOrderDetail',
+          detail: data.data
+        })
+      }
+    },
+    *backOrderList({}, {call,put,}) {
+      yield put(routerRedux.goBack());
+    },
   },
 
   reducers: {
@@ -100,6 +139,9 @@ export default {
     toUpdateOrder(state, payload) {
       state.visible = true;
       state.orderData = payload.orderData;
+      return {...state, ...payload};
+    },
+    showOrderDetail(state, payload) {
       return {...state, ...payload};
     }
   },

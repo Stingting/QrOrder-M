@@ -51,6 +51,19 @@ function CartPage({ dispatch , fetch, location, order}) {
       status:status
     })
   }
+
+  /**
+   * 跳转订单详情页面
+   * @param orderId
+   */
+  function toOrderDetail(orderId) {
+    dispatch({
+      type:'order/toOrderDetail',
+      orderId:orderId
+    })
+
+  }
+
   return (
     <MainLayout>
       <NavBar
@@ -62,6 +75,7 @@ function CartPage({ dispatch , fetch, location, order}) {
                   toUpdateOrder={toUpdateOrder}
                   updateOrder={updateOrder}
                   updateOrderStatus={updateOrderStatus}
+                  toOrderDetail={toOrderDetail}
        />
     </MainLayout>
   );

@@ -1,5 +1,5 @@
 import {login} from "../services/merchant";
-import {getLocalStorage, setLocalStorage, setSessionStorage,getSessionStorage} from "../utils/helper";
+import {getSessionStorage, setSessionStorage} from "../utils/helper";
 import {routerRedux} from 'dva/router';
 
 export default {

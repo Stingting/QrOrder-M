@@ -1,5 +1,5 @@
 import React from 'react';
-import {Icon, Menu,Badge} from 'antd';
+import {Icon, Menu} from 'antd';
 import {Link} from 'dva/router';
 import {connect} from 'dva';
 import styles from '../../assets/less/global.less';

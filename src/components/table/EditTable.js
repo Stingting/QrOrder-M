@@ -1,17 +1,32 @@
 import React from 'react';
-import {Form, Input, Select} from 'antd';
-import {Button} from 'antd-mobile';
+import {Form} from 'antd';
+import {Button, InputItem, List, Picker} from 'antd-mobile';
 
-const Option = Select.Option;
 const FormItem = Form.Item;
 
 const EditTable = ({form:{getFieldDecorator,validateFields},table,saveTable}) => {
 
   const formItemLayout ={
-    labelCol: { span: 4 },
-    wrapperCol: { span: 14 },
-  };
 
+  };
+  const pickerstatus = [
+    {
+      value: 1,
+      label: '闲置',
+    },{
+      value: 2,
+      label: '点餐中',
+    },{
+      value: 3,
+      label: '正在使用',
+    },{
+      value: 4,
+      label: '待清理',
+    },{
+      value: 5,
+      label: '清理中',
+    },
+  ];
   /**
    * 表单验证
    * @param e
@@ -21,9 +36,9 @@ const EditTable = ({form:{getFieldDecorator,validateFields},table,saveTable}) =>
     validateFields((err, values) => {
       if (!err) {
         //获取key值
-        values.status = values.status.key;
+        values.status = values.status[0];
         //保存餐桌
-        console.log(`保存的餐桌信息=${values}`)
+        console.log(`保存的餐桌信息=${JSON.stringify(values)}`)
         saveTable(values);
       }
     });
@@ -31,13 +46,13 @@ const EditTable = ({form:{getFieldDecorator,validateFields},table,saveTable}) =>
   return (
     <div>
       <div style={{textAlign:'center'}}>
-        <Form className="login-form">
+        <Form className="login-form" layout='vertical'>
           <FormItem label="餐桌号：" {...formItemLayout}>
             {getFieldDecorator('name', {
               initialValue:table.name,
               rules: [{ required: true, message: '请填写餐桌号！' }],
             })(
-              <Input disabled={table.id===undefined?false:true}/>
+              <InputItem disabled={table.id===undefined?false:true}/>
             )}
           </FormItem>
           <FormItem label="容纳人数：" {...formItemLayout}>
@@ -45,20 +60,16 @@ const EditTable = ({form:{getFieldDecorator,validateFields},table,saveTable}) =>
               initialValue:table.capacity,
               rules: [{ required: true, message: '请填写容纳人数！' }],
             })(
-              <Input disabled={table.id===undefined?false:true}/>
+              <InputItem type="number" disabled={table.id===undefined?false:true}/>
             )}
           </FormItem>
           <FormItem label="状态：" {...formItemLayout}>
             {getFieldDecorator('status', {
-              initialValue:{key:table.status===undefined?1:table.status}
+              initialValue:[table.status===undefined?1:table.status]
             })(
-              <Select labelInValue  disabled={table.id===undefined?true:false}>
-                <Option value={1}>闲置</Option>
-                <Option value={2}>点餐中</Option>
-                <Option value={3}>正在使用</Option>
-                <Option value={4}>待清理</Option>
-                <Option value={5}>清理中</Option>
-              </Select>
+              <Picker data={pickerstatus} cols={1}>
+                <List.Item arrow="horizontal"></List.Item>
+              </Picker>
             )}
           </FormItem>
           <FormItem>

@@ -1,7 +1,6 @@
 import React from 'react';
-import {Input, Icon, Button,Form,Popover} from 'antd';
+import {Button, Input, Popover} from 'antd';
 import styles from './Chat.less';
-const FormItem = Form.Item;
 
 const MessageInput = ({sendContent, handleSend, handleChange,words,visible,handleVisibleChange}) => {
   words = ['你好！', '迟点给你答复'] ;//先写死，由前端缓存，不从后台缓存
@@ -21,7 +20,7 @@ const MessageInput = ({sendContent, handleSend, handleChange,words,visible,handl
       </div>*/}
       <div className={styles.btn}>
         <Popover  content={content} placement="top" trigger="click" visible={visible}>
-          <Button type="primary" size="small" onClick={() => handleSend(sendContent)}>发送</Button>
+          <Button type="primary" size="default" onClick={() => handleSend(sendContent)}>发送</Button>
         </Popover>
       </div>
     </div>

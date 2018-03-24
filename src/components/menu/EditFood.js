@@ -1,17 +1,16 @@
 import React from 'react';
-import {Button, Form, Icon, Input, InputNumber, message, Select, Upload} from 'antd';
+import {Button, Form} from 'antd';
+import {ImagePicker, InputItem, List} from 'antd-mobile';
 import EditClassify from './EditClassify';
 import EditType from './EditType';
 
-const Option = Select.Option;
 const FormItem = Form.Item;
 
 const EditFood = ({form:{getFieldDecorator,validateFields},
-                    food,saveFood,file,uploadLoading,changeFile,uploadFile}) => {
+                    food,saveFood,changeFile,uploadFile}) => {
 
   const formItemLayout ={
-    labelCol: { span: 4 },
-    wrapperCol: { span: 14 },
+
   };
 
   /**
@@ -28,44 +27,39 @@ const EditFood = ({form:{getFieldDecorator,validateFields},
     });
   }
 
-  function beforeUpload(file) {
-    let reg = new RegExp(/^image\/\jpeg|gif|jpg|png|bmp$/, 'i');
-    if (reg.test(file.type)) {
-      if (file.size/1024 <= 200) {
-        return true;
-      } else {
-        message.info('上传文件过大');
-        return false;
-      }
-    } else {
-      message.info('图片格式不对');
-      return false;
+  let files = food.pic?[{url:food.pic}]:[];
+  function onChange(files, type, index){
+    if(type ==='remove') {
+      changeFile('',type);
     }
-    return false; //终止组件上传，手动上传，antd组件上传有问题，所以手动上传
+    else {
+      //改变文件
+      changeFile(files[0].file,type);
+      //上传
+      uploadFile();
+    }
   }
-
-  function handleChange(info){
-    changeFile(info.file.originFileObj); //获取文件File对象
-  }
-
-  const uploadProps = {
-    accept: "image/jpg,image/jpeg,image/png,image/bmp,image/gif",
-    showUploadList:false,
-    beforeUpload:(file)=>beforeUpload(file),
-    onChange:(info)=>handleChange(info)
-  };
-
   return (
-    <div>
-      <div style={{textAlign:'center'}}>
-        <Form  className="login-form">
+      <div style={{textAlign:'center',padding:10}}>
+        <Form  className="login-form"  layout='vertical'>
+          <FormItem {...formItemLayout} label="图片">
+            <ImagePicker
+              files={files}
+              onChange={(files, type, index)=>onChange(files, type, index)}
+              onImageClick={(index, fs) => console.log(index, fs)}
+              selectable={files.length ===0}
+              multiple={false}
+            />
+          </FormItem>
           <FormItem label="食物名：" {...formItemLayout}>
+            <List>
             {getFieldDecorator('name', {
               initialValue:food.name,
-              rules: [{ required: true, message: '请填写食物名！' }],
+              rules: [{ required: true, message: '请填写食物名称！' }],
             })(
-              <Input disabled={food.id===undefined?false:true}/>
+              <InputItem disabled={food.id===undefined?false:true}  placeholder="请输入食物名称"/>
             )}
+            </List>
           </FormItem>
           <FormItem label="分类：" {...formItemLayout}>
              <EditClassify/>
@@ -73,38 +67,24 @@ const EditFood = ({form:{getFieldDecorator,validateFields},
           <FormItem label="规格：" {...formItemLayout}>
              <EditType/>
           </FormItem>
-          <FormItem label="价格：(元)" {...formItemLayout}>
+          <FormItem label="价格：" {...formItemLayout}>
+            <List>
             {getFieldDecorator('price', {
-              initialValue:food.price==undefined?0:food.price,
+              initialValue:food.price===undefined?0:food.price,
               rules: [{ required: true, message: '请填写价格！' }],
             })(
-              <InputNumber min={0} max={100000}/>
+              <InputItem type='number' clear moneyKeyboardAlign="left" extra="¥"  placeholder="请输入食物价格"/>
             )}
+            </List>
           </FormItem>
           <FormItem label="描述：" {...formItemLayout}>
+            <List>
             {getFieldDecorator('desc', {
               initialValue:food.desc
             })(
-              <Input.TextArea/>
+              <InputItem  placeholder="请输入食物描述"/>
             )}
-          </FormItem>
-          <FormItem {...formItemLayout} label="图片">
-            {food.pic ? <img src={food.pic} width={150} height={150} alt="" /> :""}
-            <Upload {...uploadProps}>
-              <Button>
-                <Icon type="upload" /> 选择图片
-              </Button>
-            </Upload>
-            <Button
-              className="upload-demo-start"
-              type="primary"
-              onClick={uploadFile}
-              disabled={file===undefined||file===''}
-              loading={uploadLoading}
-            >
-              上传
-            </Button>
-            {file?file.fileName:""}
+            </List>
           </FormItem>
           <FormItem>
             <Button type="primary" onClick={handleSubmit} className="login-form-button" style={{width:'100%'}}>
@@ -113,7 +93,6 @@ const EditFood = ({form:{getFieldDecorator,validateFields},
           </FormItem>
         </Form>
       </div>
-    </div>
   );
 }
 

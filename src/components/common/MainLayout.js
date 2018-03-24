@@ -1,11 +1,11 @@
 import React from 'react';
 import MenuBanner from './MenuBanner';
-import {Layout,Modal,Badge} from 'antd';
+import {Badge, Layout, Modal} from 'antd';
 import styles from '../../assets/less/global.less';
 import {connect} from "dva";
 import OrderMsg from '../order/OrderMsg';
 
-const { Header, Content, Footer, Sider} = Layout;
+const {Content} = Layout;
 
 function MainLayout({dispatch, children, location,chat}) {
 

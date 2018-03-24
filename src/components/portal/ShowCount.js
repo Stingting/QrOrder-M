@@ -1,8 +1,7 @@
 import React from 'react';
 import styles from './Portal.less';
 import {Link} from 'dva/router';
-import {Icon} from 'antd';
-import {getLocalStorage,isObject} from "../../utils/helper";
+import {getLocalStorage, isObject} from "../../utils/helper";
 
 const ShowCount = ({count}) => {
     const eatingPath = {

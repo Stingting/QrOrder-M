@@ -1,5 +1,5 @@
 import {getMerchantInfo} from "../services/merchant";
-import {getLocalStorage, getSessionStorage} from "../utils/helper";
+import {getSessionStorage} from "../utils/helper";
 import {routerRedux} from 'dva/router';
 
 export default {
@@ -32,7 +32,7 @@ export default {
   effects: {
     *getMerchantInfo({ payload }, { call, put }) {  // eslint-disable-line
       const merchantId = getSessionStorage("merchantId");
-      if(merchantId!=null&&merchantId!=undefined) {
+      if(merchantId!==null&&merchantId!==undefined) {
         const {data} = yield call(getMerchantInfo, getSessionStorage("merchantId"));
         yield put({
           type: 'showMerchantInfo',
@@ -46,9 +46,10 @@ export default {
         });
       }
     },
-    *backToPortal({payload}, {call,put,select}) {
-      yield put(routerRedux.goBack());
-    },
+    *backToPortal({},{call,put}) {
+      //跳转到首页
+      yield put(routerRedux.push('/app/v1/mportal'));
+    }
   },
 
   reducers: {

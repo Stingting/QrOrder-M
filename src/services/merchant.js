@@ -1,6 +1,7 @@
 import request from '../utils/request';
 import qs from 'qs';
-import {getLocalStorage, getSessionStorage, isObject} from "../utils/helper";
+import {getSessionStorage, isObject} from "../utils/helper";
+
 /**
  * 登录
  * @param params
@@ -98,6 +99,17 @@ export function updateOrderStatus(params) {
     body:qs.stringify(params)
   });
 }
+
+//获取订单详情
+export function getOrderDetail(merchantId, orderId) {
+  return request(`/v1/order/${merchantId}/${orderId}`, {
+    method : 'GET',
+    headers: {
+      authorization:getSessionStorage("token")
+    }
+  })
+}
+
 
 /**
  * 获取客户列表信息
@@ -311,10 +323,6 @@ export function uploadFile(params) {
   let formData = new FormData();
   formData.append("file",params.file);
   formData.append("userId", params.userId);
-  const obj = {
-    userId:2
-  }
-  params.userId = 2;
   return request('/v1/upload', {
     method:'OPTIONS',
     headers:{

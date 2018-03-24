@@ -7,8 +7,8 @@ import styles from '../assets/less/global.less';
 
 function MenuPage({ dispatch , fetch, location, menu}) {
 
-  const {menuList, loading,visible,food,file,uploadLoading} = menu;
-  const menuListProps = {menuList, loading,visible,food,file,uploadLoading};
+  const {menuList, loading,visible,food} = menu;
+  const menuListProps = {menuList, loading,visible,food};
 
   /**
    * 获取食物详情
@@ -41,18 +41,19 @@ function MenuPage({ dispatch , fetch, location, menu}) {
   }
 
   /**
-   *
    * @param file
+   * @param changeType
    */
-  function changeFile(file) {
+  function changeFile(file,changeType) {
     dispatch({
       type:'menu/changeFile',
-      file:file
+      file:file,
+      changeType:changeType
     })
   }
 
   /**
-   *
+   * 上传文件
    */
   function uploadFile() {
     dispatch({

@@ -1,6 +1,8 @@
 import React from 'react';
 import {connect} from "dva";
-import { Tag, Input, Tooltip, Icon ,Button} from 'antd';
+import {Icon, Input, Tag, Tooltip} from 'antd';
+import {Modal} from 'antd-mobile';
+const alert = Modal.alert;
 
 const EditType = ({dispatch , fetch, location, menu}) => {
 
@@ -9,7 +11,10 @@ const EditType = ({dispatch , fetch, location, menu}) => {
   const tags = foodType.map((tag, index) => {
     const isLongTag = tag.length > 20;
     const tagElem =
-      <Tag key={index} closable={true} afterClose={() => handleClose(tag,index)}>
+      <Tag key={index} closable={true} onClose={(e) => {e.preventDefault();alert('删除', '确定删除吗？', [
+          { text: '取消', onPress: () => console.log('cancel') },
+          { text: '确定', onPress: () => handleClose(tag,index)}])
+      }}>
         {isLongTag ? `${tag.slice(0, 20)}...` : tag}
       </Tag>
     ;
@@ -41,7 +46,7 @@ const EditType = ({dispatch , fetch, location, menu}) => {
   };
 
   function handleFoodTypeInputConfirm (){
-    if(inputFoodTypeValue!='' && inputFoodTypeValue!=undefined) {
+    if(inputFoodTypeValue!=='' && inputFoodTypeValue!==undefined) {
       dispatch({
         type:'menu/addFoodType',
         name:inputFoodTypeValue,

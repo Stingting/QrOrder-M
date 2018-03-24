@@ -6,18 +6,21 @@ import styles from './OrderList.less';
 import {Modal} from 'antd-mobile';
 
 const OrderList = ({loading,orderList,totalPerson,totalPrice,totalCount,orderData,visible,
-                     toUpdateOrder,updateOrder,updateOrderStatus,closeDialog}) => {
+                     toUpdateOrder,updateOrder,updateOrderStatus,closeDialog,toOrderDetail}) => {
 
   const action = (status,orderId,data) =>{
     const sureStatus  = 3;
     const finishStatus = 4;
+    let action;
     switch (status) {
-      case 0: return '';
-      case 1: return  <Button type="primary" onClick={() => toUpdateOrder(data)}>修改</Button> ;
-      case 2: return  <Button type="danger" onClick={() => updateOrderStatus(orderId,sureStatus)}>确认收款</Button> ;
-      case 3: return  <Button type="danger" onClick={() => updateOrderStatus(orderId,finishStatus)}>确认完成</Button> ;
-      case 4: return '';
+      case 0: action =''; break;
+      case 1: action = <Button type="primary" onClick={(e) =>{e.stopPropagation();toUpdateOrder(data)}}>修改</Button> ;break;
+      case 2: action = <Button type="danger" onClick={(e) => {e.stopPropagation();updateOrderStatus(orderId,sureStatus)}}>确认收款</Button> ;break;
+      case 3: action = <Button type="danger" onClick={(e) => {e.stopPropagation();updateOrderStatus(orderId,finishStatus)}}>确认完成</Button> ;break;
+      case 4: action ='';break;
+      default : action='';break;
     }
+    return action;
   };
   return (
     <div className={styles['order-list']}>
@@ -33,7 +36,7 @@ const OrderList = ({loading,orderList,totalPerson,totalPrice,totalCount,orderDat
           dataSource={orderList}
           size="middle"
           renderItem={item => (
-            <List.Item actions={[action(item.status,item.id,item)]}>
+            <List.Item actions={[action(item.status,item.id,item)]} onClick={() => toOrderDetail(item.id)}>
               <List.Item.Meta
                 title={<div style={{fontSize:12, fontWeight:'bold'}}>桌号：{item.tableName}&nbsp;人数：{item.personNum}人</div>}
                 description={

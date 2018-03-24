@@ -1,6 +1,8 @@
 import React from 'react';
 import {connect} from "dva";
 import { Tag, Input, Tooltip, Icon } from 'antd';
+import {Modal} from 'antd-mobile';
+const alert = Modal.alert;
 
 const EditClassify = ({dispatch , fetch, location, menu}) => {
 
@@ -9,7 +11,10 @@ const EditClassify = ({dispatch , fetch, location, menu}) => {
   const tags = classify.map((tag, index) => {
     const isLongTag = tag.name.length > 20;
     const tagElem =
-      <Tag key={tag.id} closable={true} afterClose={() => handleClose(tag)}>
+      <Tag key={tag.id} closable={true} onClose={(e) => {e.preventDefault();alert('删除', '确定删除吗？', [
+        { text: '取消', onPress: () => console.log('cancel') },
+        { text: '确定', onPress: () => handleClose(tag)},
+      ])}}>
         {isLongTag ? `${tag.name.slice(0, 20)}...` : tag.name}
       </Tag>
     ;
@@ -40,7 +45,7 @@ const EditClassify = ({dispatch , fetch, location, menu}) => {
   };
 
   function handleInputConfirm (){
-    if(inputValue!='' && inputValue!=undefined) {
+    if(inputValue!=='' && inputValue!==undefined) {
       dispatch({
         type:'menu/addClassify',
         name:inputValue

@@ -45,7 +45,7 @@ const MenuList = ({menuList, loading,getMenuDetail,visible,food,
   };
   return (
     <div>
-      <div style={{paddingTop: 45,height:500,overflowY:'auto'}}>
+      <div style={{paddingTop: 45,height:460,overflowY:'auto',backgroundColor:'white'}}>
         <List
           split={true}
           loading={loading}
@@ -83,8 +83,6 @@ const MenuList = ({menuList, loading,getMenuDetail,visible,food,
         <EditFood
           food={food}
           saveFood={saveFood}
-          file={file}
-          uploadLoading={uploadLoading}
           changeFile={changeFile}
           uploadFile={uploadFile}
         />

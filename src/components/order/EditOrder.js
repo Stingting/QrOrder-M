@@ -1,15 +1,15 @@
 import React from 'react';
-import {Button, Form, Input, Select} from 'antd';
+import {Button, Form} from 'antd';
+import {List, Picker} from 'antd-mobile';
 import moment from 'moment';
 
-const Option = Select.Option;
 const FormItem = Form.Item;
 
 const EditOrder = ({form:{getFieldDecorator,validateFields},orderData,updateOrder}) => {
 
   const formItemLayout ={
     labelCol: { span: 4 },
-    wrapperCol: { span: 14 },
+    wrapperCol: { span: 14 }
   };
 
   /**
@@ -21,10 +21,11 @@ const EditOrder = ({form:{getFieldDecorator,validateFields},orderData,updateOrde
     validateFields((err, values) => {
       if (!err) {
         //获取key值
-        values.personNum = values.personNum.key;
+        values.id = orderData.id;
+        values.personNum = values.personNum[0];
         values.tableId = orderData.tableId; //tableId赋值，因表单没有
         //保存
-        console.log(`保存的订单信息=${values}`);
+        console.log(`保存的订单信息=${JSON.stringify(values)}`);
         updateOrder(values);
       }
     });
@@ -33,34 +34,36 @@ const EditOrder = ({form:{getFieldDecorator,validateFields},orderData,updateOrde
   const listOptions = () => {
     const res = [];
     for(let i = 1; i <= maxPersonNum; i++) {
-      res.push(<Option value={i} key={{key:i}}>{i}人</Option>)
+      res.push({
+        value: i,
+        label: `${i}人`,
+      })
     }
     return res
   };
 
   return (
-    <div>
-      <div style={{textAlign:'center'}}>
-        <Form onSubmit={(e)=>handleSubmit(e)} className="login-form">
-          <FormItem label="订单号：" {...formItemLayout}>
-            {getFieldDecorator('id', {
-              initialValue:orderData.id
+      <div style={{textAlign:'center', padding:10}}>
+        <Form onSubmit={(e)=>handleSubmit(e)} className="login-form" layout='vertical'>
+          <FormItem label="订单号" {...formItemLayout}>
+            {getFieldDecorator('orderNo', {
+              initialValue:orderData.orderNo
             })(
-              <span>{orderData.id}</span>
+              <span style={{float:'left',color: '#bbb'}}>{orderData.id}</span>
             )}
           </FormItem>
-          <FormItem label="下单时间：" {...formItemLayout}>
+          <FormItem label="下单时间" {...formItemLayout}>
             {getFieldDecorator('createTime', {
               initialValue:orderData.createTime
             })(
-              <span>{moment(orderData.createTime).format('YYYY-MM-DD HH:mm:ss')}</span>
+              <span style={{float:'left',color: '#bbb'}}>{moment(orderData.createTime).format('YYYY-MM-DD HH:mm:ss')}</span>
             )}
           </FormItem>
-          <FormItem label="订单状态：" {...formItemLayout}>
+          <FormItem label="订单状态" {...formItemLayout}>
             {getFieldDecorator('status', {
               initialValue:orderData.status
             })(
-              <span>
+              <span style={{float:'left',color: '#bbb'}}>
                 {(() => {
                   switch (orderData.status) {
                     case 0:  return "未知";
@@ -75,20 +78,20 @@ const EditOrder = ({form:{getFieldDecorator,validateFields},orderData,updateOrde
             )}
           </FormItem>
 
-          <FormItem label="餐桌号：" {...formItemLayout}>
+          <FormItem label="餐桌号" {...formItemLayout}>
             {getFieldDecorator('tableName', {
               initialValue:orderData.tableName
             })(
-              <span>{orderData.tableName}</span>
+              <span style={{float:'left',color: '#bbb'}}>{orderData.tableName}</span>
             )}
           </FormItem>
-          <FormItem label="用餐人数：" {...formItemLayout}>
+          <FormItem label="用餐人数" {...formItemLayout}>
             {getFieldDecorator('personNum', {
-              initialValue:{key:orderData.personNum}
+              initialValue:[orderData.personNum]
             })(
-              <Select labelInValue>
-                {listOptions()}
-              </Select>
+              <Picker data={listOptions()} cols={1}>
+                <List.Item arrow="horizontal"></List.Item>
+              </Picker>
             )}
           </FormItem>
           <FormItem>
@@ -98,7 +101,6 @@ const EditOrder = ({form:{getFieldDecorator,validateFields},orderData,updateOrde
           </FormItem>
         </Form>
       </div>
-    </div>
   );
 }
 

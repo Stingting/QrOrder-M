@@ -41,61 +41,64 @@ export default {
           let tableTotalUnreadCount = getLocalStorage("tableTotalUnreadCount");
           setLocalStorage("tableTotalUnreadCount",tableTotalUnreadCount-count);
         }
-        mqttClient.getInstance().on('connect', function () {
-          //商家订阅本店所有台的聊天室信息
-          const topic = `orderSystem/${getSessionStorage("merchantId")}/+/chat`;
-          //商家订阅本店所有台的订单信息
-          const orderTopic =`orderSystem/${getSessionStorage("merchantId")}/+/order`;
-          console.log("connect to emqtt...");
-          mqttClient.getInstance().subscribe(topic);
-          mqttClient.getInstance().subscribe(orderTopic);
-          console.log(`订阅的聊天室主题：${topic}`);
-          console.log(`订阅的订单主题：${orderTopic}`);
-          mqttClient.getInstance().on('message', function (topic, message) {
 
-            const match = pathToRegexp(`orderSystem/${getSessionStorage('merchantId')}/:tableNum/chat`).exec(topic);
-            if (match) {
-              topicTableNum = match[match.length - 1];
+       if(getSessionStorage("merchantId")!==null) {
+         mqttClient.getInstance().on('connect', function () {
+           //商家订阅本店所有台的聊天室信息
+           const topic = `orderSystem/${getSessionStorage("merchantId")}/+/chat`;
+           //商家订阅本店所有台的订单信息
+           const orderTopic = `orderSystem/${getSessionStorage("merchantId")}/+/order`;
+           console.log("connect to emqtt...");
+           mqttClient.getInstance().subscribe(topic);
+           mqttClient.getInstance().subscribe(orderTopic);
+           console.log(`订阅的聊天室主题：${topic}`);
+           console.log(`订阅的订单主题：${orderTopic}`);
+           mqttClient.getInstance().on('message', function (topic, message) {
 
-              if (curTableNum === Number(topicTableNum)) {
-                //设置聊天消息
-                dispatch({type: 'setChatMessage', chatMsg: message.toString()});
-              } else {
-                //缓存餐桌的未读数
-                let tableUnreadCount = getLocalStorage(`table/${topicTableNum}`);
-                //缓存餐桌的总的未读数
-                let tableTotalUnreadCount = getLocalStorage("tableTotalUnreadCount");
-                if (!isObject(tableUnreadCount)) {
-                  tableUnreadCount = 1;
-                } else {
-                  tableUnreadCount += 1;
-                }
-                if (!isObject(tableTotalUnreadCount)) {
-                  tableTotalUnreadCount = 1;
-                } else {
-                  tableTotalUnreadCount += 1;
-                }
-                setLocalStorage(`table/${topicTableNum}`, tableUnreadCount);
-                setLocalStorage("tableTotalUnreadCount", tableTotalUnreadCount);
-              }
+             const match = pathToRegexp(`orderSystem/${getSessionStorage('merchantId')}/:tableNum/chat`).exec(topic);
+             if (match) {
+               console.log(`收到的聊天消息${message.toString()}`);
+               topicTableNum = match[match.length - 1];
 
-            }
-            //获取订单信息
-            const orderTopicMatch = pathToRegexp(`orderSystem/${getSessionStorage('merchantId')}/:tableNum/order`).exec(orderTopic);
-            if(orderTopicMatch) {
-              console.log(`收到的订单消息${message.toString()}`);
-              //设置新的订单信息
-              dispatch({type:'setOrderMessage', orderMsg:message.toString()});
-              //弹出新订单信息框
-              dispatch({
-                type:'showOrderDialog',
-                orderModalVisible:true
-              })
-            }
+               if (curTableNum === Number(topicTableNum)) {
+                 //设置聊天消息
+                 dispatch({type: 'setChatMessage', chatMsg: message.toString()});
+               } else {
+                 //缓存餐桌的未读数
+                 let tableUnreadCount = getLocalStorage(`table/${topicTableNum}`);
+                 //缓存餐桌的总的未读数
+                 let tableTotalUnreadCount = getLocalStorage("tableTotalUnreadCount");
+                 if (!isObject(tableUnreadCount)) {
+                   tableUnreadCount = 1;
+                 } else {
+                   tableUnreadCount += 1;
+                 }
+                 if (!isObject(tableTotalUnreadCount)) {
+                   tableTotalUnreadCount = 1;
+                 } else {
+                   tableTotalUnreadCount += 1;
+                 }
+                 setLocalStorage(`table/${topicTableNum}`, tableUnreadCount);
+                 setLocalStorage("tableTotalUnreadCount", tableTotalUnreadCount);
+               }
 
-          });
-        });
+             }
+             //获取订单信息
+             const orderTopicMatch = pathToRegexp(`orderSystem/${getSessionStorage('merchantId')}/:tableNum/order`).exec(topic);
+             if (orderTopicMatch) {
+               console.log(`收到的订单消息${message.toString()}`);
+               //设置新的订单信息
+               dispatch({type: 'setOrderMessage', orderMsg: message.toString()});
+               //弹出新订单信息框
+               dispatch({
+                 type: 'showOrderDialog',
+                 orderModalVisible: true
+               })
+             }
 
+           });
+         });
+       }
         mqttClient.getInstance().on('close', function () {
           console.log("emqtt closed...");
         });

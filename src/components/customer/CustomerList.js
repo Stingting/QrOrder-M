@@ -3,8 +3,7 @@ import {Avatar, List} from 'antd';
 
 const CustomerList = ({loading,customerList}) => {
   return (
-    <div>
-      <div style={{paddingTop:'30px',height:400,overflowY:'auto'}}>
+      <div style={{paddingTop: 45,backgroundColor:'white'}}>
         <List
           bordered
           split={true}
@@ -23,7 +22,6 @@ const CustomerList = ({loading,customerList}) => {
           )}
         />
       </div>
-    </div>
   );
 };
 

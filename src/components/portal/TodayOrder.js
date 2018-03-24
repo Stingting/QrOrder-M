@@ -1,5 +1,5 @@
 import React from 'react';
-import {Table,Divider,Icon} from 'antd';
+import {Icon, Table} from 'antd';
 import styles from './Portal.less';
 import moment from 'moment';
 
@@ -34,6 +34,7 @@ const TodayOrder = ({orderList}) => {
   },{
     title:'就餐状态',
     dataIndex:'status',
+    key:'status',
     render:(text, record) => (
       <div key={record.id}>
         <span>{text===1?<Icon type="close-circle" style={{color:'red'}}/>:<Icon type="check-circle" style={{color:'green'}}/>}</span>
@@ -43,9 +44,9 @@ const TodayOrder = ({orderList}) => {
   }];
   return (
     <div className={styles["today-order"]}>
-      <div style={{height:'30px', lineHeight:'30px',fontWeight:'bold',textAlign:'left',borderBottom:'1px solid black'}}>今日订单</div>
+      <div style={{height:'30px', lineHeight:'30px',fontWeight:'bold',textAlign:'left',borderBottom:'1px solid #ccc'}}>今日订单</div>
       <div>
-        <Table dataSource={orderList} columns={columns} pagination={false} scroll={{ x: true, y: 300 }} showHeader={false}/>
+        <Table rowKey="id" dataSource={orderList} columns={columns} pagination={false} scroll={{ x: true, y: 300 }} showHeader={false}/>
       </div>
     </div>
   );

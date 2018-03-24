@@ -18,7 +18,6 @@ export default {
       inputVisible:false,
       inputValue:'',
       file:'',//上传的文件
-      uploadLoading:false, //上传文件加载
       foodType:[], //食物规格
       inputFoodTypeVisible:false,
       inputFoodTypeValue:''
@@ -51,14 +50,14 @@ export default {
         }
     },
     *getMenuDetail({foodId}, {call,put}) {
-      if(foodId!=undefined) {
+      if(foodId!==undefined) {
         const {data} = yield call(getMenuDetail, getSessionStorage("merchantId"), foodId);
         if(data) {
           let foodType = data.data.type.length>0?data.data.type.split(','):[];
           yield put({
             type: 'showMenuDetail',
             food: data.data,
-            classify: data.data.classify == null ? [] : data.data.classify, //修改时回显菜式类型，
+            classify: data.data.classify === null ? [] : data.data.classify, //修改时回显菜式类型，
             foodType:foodType, //这里用foodType , 否则与type关键字冲突
             visible: true
           })
@@ -90,7 +89,7 @@ export default {
         if(foodType.length>0) {
           food.type =foodType.join(",");
         }
-        if (foodId===null||foodId==undefined||foodId=='') {
+        if (foodId===null||foodId===undefined||foodId==='') {
           const {data} = yield call(saveFood, food);
           isOk=data.isOk;
         } else {
@@ -111,10 +110,8 @@ export default {
         file:file,
         userId:getSessionStorage("merchantId")
       };
-      yield put({type:'showUploadLoading'});
       const {data} = yield call(uploadFile, params);
       if(data) {
-        yield put({type:'hideUploadLoading'});
         yield put({
           type: 'changeFoodPic',
           pic: data.name
@@ -180,20 +177,14 @@ export default {
       return {...state, ...payload};
     },
     changeFile(state,payload) {
+      if(payload.changeType ==='remove') {
+        state.food.pic='';
+      }
       state.file=payload.file;
       return {...state, ...payload};
     },
     changeFoodPic(state,payload) {
       state.food.pic=payload.pic;
-      return {...state, ...payload};
-    },
-
-    showUploadLoading(state,payload) {
-      state.uploadLoading=true;
-      return {...state, ...payload};
-    },
-    hideUploadLoading(state,payload) {
-      state.uploadLoading=false;
       return {...state, ...payload};
     },
     showInput(state,payload) {

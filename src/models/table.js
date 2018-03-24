@@ -49,7 +49,7 @@ export default {
        }
     },
     *editTable({tableId}, {call,put}) {
-      if(tableId!=undefined&&tableId!=null) {
+      if(tableId!==undefined&&tableId!==null) {
         const {data} = yield call(getTableDetail, getSessionStorage("merchantId"), tableId);
         if(data) {
           yield put({
@@ -72,7 +72,7 @@ export default {
       table.id = id;
       table.tableId = tableId;
       let isOk = false;
-      if (tableId!=undefined) {
+      if (tableId!==undefined) {
         const {data} = yield call(updateTable, table);
         isOk=data.isOk;
       } else {
