@@ -49,7 +49,7 @@ const EditOrder = ({form:{getFieldDecorator,validateFields},orderData,updateOrde
             {getFieldDecorator('orderNo', {
               initialValue:orderData.orderNo
             })(
-              <span style={{float:'left',color: '#bbb'}}>{orderData.id}</span>
+              <span style={{float:'left',color: '#bbb'}}>{orderData.orderNo}</span>
             )}
           </FormItem>
           <FormItem label="下单时间" {...formItemLayout}>

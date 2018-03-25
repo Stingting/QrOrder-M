@@ -48,7 +48,7 @@ const TableList = ({tableList,loading,editTable,deleteTable,visible,table,closeD
                          { text: '聊天室', onPress: () => selectedTo(item.id,'chat') },
                        ])}>
               <List.Item.Meta
-                title={<Badge count={getUnreadCount(item.id)} offset={[-18, -2]}><p>{item.name}</p></Badge>}
+                title={<Badge count={getUnreadCount(item.id)} offset={[-18, -2]}><p style={{fontWeight:'bold'}}>{item.name}</p></Badge>}
                 description={
                   <div>
                     <div>用餐人数：&nbsp;{item.personNum}</div>

@@ -38,15 +38,16 @@ const OrderList = ({loading,orderList,totalPerson,totalPrice,totalCount,orderDat
           renderItem={item => (
             <List.Item actions={[action(item.status,item.id,item)]} onClick={() => toOrderDetail(item.id)}>
               <List.Item.Meta
-                title={<div style={{fontSize:12, fontWeight:'bold'}}>桌号：{item.tableName}&nbsp;人数：{item.personNum}人</div>}
+                title={<div style={{fontSize:12, fontWeight:'bold'}}>桌号：{item.tableName}</div>}
                 description={
-                  <div style={{fontSize:10}}>
+                  <div style={{fontSize:12}}>
+                    <div>用餐人数：{item.personNum}人</div>
                     <div>下单时间：{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}</div>
-                    <div>总价：&yen;{item.price}</div>
+                    <div>合计：&yen;{item.price}</div>
                   </div>
                 }
               />
-              <div style={{color:'#00ffcc'}}>
+              <div className={item.status<=1?styles.unpaidbtn:styles.paidbtn}>
                 {/*0:未知,1:待付款,2:已付款,3:已确认,4:已完成*/}
                 {(() => {
                   switch (item.status) {

@@ -40,9 +40,9 @@ const EditFood = ({form:{getFieldDecorator,validateFields},
     }
   }
   return (
-      <div style={{textAlign:'center',padding:10}}>
+      <div style={{textAlign:'center',paddingBottom:10}}>
         <Form  className="login-form"  layout='vertical'>
-          <FormItem {...formItemLayout} label="图片">
+          <FormItem {...formItemLayout} label="食物图片">
             <ImagePicker
               files={files}
               onChange={(files, type, index)=>onChange(files, type, index)}
@@ -51,7 +51,7 @@ const EditFood = ({form:{getFieldDecorator,validateFields},
               multiple={false}
             />
           </FormItem>
-          <FormItem label="食物名：" {...formItemLayout}>
+          <FormItem label="食物名称" {...formItemLayout}>
             <List>
             {getFieldDecorator('name', {
               initialValue:food.name,
@@ -61,23 +61,23 @@ const EditFood = ({form:{getFieldDecorator,validateFields},
             )}
             </List>
           </FormItem>
-          <FormItem label="分类：" {...formItemLayout}>
+          <FormItem label="食物分类" {...formItemLayout}>
              <EditClassify/>
           </FormItem>
-          <FormItem label="规格：" {...formItemLayout}>
+          <FormItem label="食物规格" {...formItemLayout}>
              <EditType/>
           </FormItem>
-          <FormItem label="价格：" {...formItemLayout}>
+          <FormItem label="食物价格" {...formItemLayout}>
             <List>
             {getFieldDecorator('price', {
               initialValue:food.price===undefined?0:food.price,
               rules: [{ required: true, message: '请填写价格！' }],
             })(
-              <InputItem type='number' clear moneyKeyboardAlign="left" extra="¥"  placeholder="请输入食物价格"/>
+              <InputItem type='money' clear moneyKeyboardAlign="left" extra="¥"  placeholder="请输入食物价格"/>
             )}
             </List>
           </FormItem>
-          <FormItem label="描述：" {...formItemLayout}>
+          <FormItem label="食物描述" {...formItemLayout}>
             <List>
             {getFieldDecorator('desc', {
               initialValue:food.desc
