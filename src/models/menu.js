@@ -1,6 +1,6 @@
 import {
   getMenuList, getMenuDetail, saveFood, uploadFile, deleteFood, updateFood, getClassifyList,
-  deleteClassify, addClassify
+  deleteClassify, addClassify,getSaleoutMenu
 } from '../services/merchant';
 import {getSessionStorage} from "../utils/helper";
 
@@ -25,11 +25,12 @@ export default {
 
   subscriptions: {
     setup({ dispatch, history }) {  // eslint-disable-line
-      return history.listen(({ pathname,search})=>{
+      return history.listen(({ pathname,search,state})=>{
           if(pathname.includes('/app/v1/menu')) {
             //查询食物列表
             dispatch({
-              type:'getMenuList'
+              type:'getMenuList',
+              status:state
             })
           }
       });
@@ -37,16 +38,29 @@ export default {
   },
 
   effects: {
-    *getMenuList({ payload }, { call, put }) {
+    *getMenuList({ status }, { call, put }) {
         yield put({type:'showLoading'});
-        const {data} = yield call(getMenuList, getSessionStorage("merchantId"));
-        if (data) {
-          yield put({type: 'hideLoading'});
-          yield put({
-            type: 'showMenuList',
-            count: data.count,
-            menuList: data.data
-          })
+        //查询售罄菜式
+        if(status ===0) {
+          const {data} = yield call(getSaleoutMenu, getSessionStorage("merchantId"));
+          if (data) {
+            yield put({type: 'hideLoading'});
+            yield put({
+              type: 'showMenuList',
+              menuList: data.data
+            })
+          }
+        }
+        else {
+          const {data} = yield call(getMenuList, getSessionStorage("merchantId"));
+          if (data) {
+            yield put({type: 'hideLoading'});
+            yield put({
+              type: 'showMenuList',
+              count: data.count,
+              menuList: data.data
+            })
+          }
         }
     },
     *getMenuDetail({foodId}, {call,put}) {

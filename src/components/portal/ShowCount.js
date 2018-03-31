@@ -6,14 +6,15 @@ import {getLocalStorage, isObject} from "../../utils/helper";
 const ShowCount = ({count}) => {
     const eatingPath = {
       pathname:'/app/v1/table',
-      state:2
+      state:3
     };
     const emptyPath = {
       pathname:'/app/v1/table',
       state:1
     };
     const saleOutMenuPath = {
-      pathname:'/app/v1/menu'
+      pathname:'/app/v1/menu',
+      state:0
     };
     const tablePath = {
       pathname:'/app/v1/table'

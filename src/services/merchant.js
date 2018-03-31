@@ -131,7 +131,21 @@ export function getCustomerList(merchantId) {
  * @returns {Object}
  */
 export function getMenuList(merchantId) {
-  return request('/v1/menu/' + merchantId, {
+  return request(`/v1/menu/${merchantId}`, {
+    method:'GET',
+    headers: {
+      authorization:getSessionStorage("token")
+    }
+  });
+}
+
+/**
+ * 获取售馨菜式
+ * @param merchantId
+ * @returns {Object}
+ */
+export function getSaleoutMenu(merchantId) {
+  return request(`/v1/menu/${merchantId}/saleout`, {
     method:'GET',
     headers: {
       authorization:getSessionStorage("token")

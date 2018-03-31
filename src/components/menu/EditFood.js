@@ -55,9 +55,9 @@ const EditFood = ({form:{getFieldDecorator,validateFields},
             <List>
             {getFieldDecorator('name', {
               initialValue:food.name,
-              rules: [{ required: true, message: '请填写食物名称！' }],
+              rules: [{ required: true, message: '请输入食物名称！' }],
             })(
-              <InputItem disabled={food.id===undefined?false:true}  placeholder="请输入食物名称"/>
+              <InputItem  placeholder="请输入食物名称"/>
             )}
             </List>
           </FormItem>
