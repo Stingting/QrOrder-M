@@ -2,7 +2,7 @@ import React from 'react';
 import {Button, List} from 'antd';
 import {connect} from 'dva';
 import styles from './OrderList.less';
-import {Icon, Modal, NavBar, Popover} from 'antd-mobile';
+import {Icon, Modal, NavBar, Popover,WingBlank} from 'antd-mobile';
 import moment from 'moment';
 import EditOrder from './EditOrder';
 
@@ -85,27 +85,29 @@ function OrderDetail ({dispatch,location,order}) {
         })()}
       </div>
       <div className={styles.content}>
-      <List
-        itemLayout="horizontal"
-        dataSource={detailData.list}
-        renderItem={item => (
-          <List.Item>
-            <List.Item.Meta
-              avatar={<img width={100} height={100} alt={item.name} src={item.pic}/>}
-              title={<span className={styles.dishname}>{item.name}</span>}
-              description={<div>
-                <div>{item.desc}</div>
-                <div>{item.type.name}&nbsp;月售:&nbsp;{item.saleCount}</div>
-                <div><span style={{color: 'red'}}>&yen;{item.price}</span>
+        <WingBlank>
+          <List
+            itemLayout="horizontal"
+            dataSource={detailData.list}
+            renderItem={item => (
+              <List.Item>
+                <List.Item.Meta
+                  avatar={<img width={100} height={100} alt={item.name} src={item.pic}/>}
+                  title={<span className={styles.dishname}>{item.name}</span>}
+                  description={<div>
+                    <div>{item.desc}</div>
+                    <div>{item.type.name}&nbsp;月售:&nbsp;{item.saleCount}</div>
+                    <div><span style={{color: 'red'}}>&yen;{item.price}</span>
+                    </div>
+                  </div>}
+                />
+                <div>
+                  &times;{item.num}
                 </div>
-              </div>}
-            />
-            <div>
-              &times;{item.num}
-            </div>
-          </List.Item>
-        )}
-      />
+              </List.Item>
+            )}
+          />
+        </WingBlank>
       </div>
       <div className={styles.bottom}>
         <span>合计：&yen;{detailData.price} &nbsp;&nbsp;</span>
