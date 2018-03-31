@@ -51,7 +51,7 @@ const ShowCount = ({count}) => {
           </div>
         </div>
         <div className={styles["num-middle"]}>
-          <p>菜式售馨数</p>
+          <p>菜式售罄数</p>
           <div className={styles['circle-eating']}>
             <Link to={saleOutMenuPath}>
               {/*<p><Icon type="user" style={{fontSize:30}} /></p>*/}
