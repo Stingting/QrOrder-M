@@ -2,6 +2,7 @@ import React from 'react';
 import {List} from 'antd';
 import {Button,WhiteSpace,Modal,ActionSheet,WingBlank} from 'antd-mobile';
 import EditFood from './EditFood';
+import styles from './MenuList.less';
 const alert = Modal.alert;
 
 const MenuList = ({menuList, loading,getMenuDetail,visible,food,
@@ -45,7 +46,7 @@ const MenuList = ({menuList, loading,getMenuDetail,visible,food,
   };
   return (
     <div>
-      <div style={{paddingTop: 45,height:460,overflowY:'auto',backgroundColor:'white'}}>
+      <div className={styles.content}>
         <WingBlank>
           <List
             split={true}
@@ -57,11 +58,12 @@ const MenuList = ({menuList, loading,getMenuDetail,visible,food,
               <List.Item onClick={()=>showActionSheet(item.id)}>
                 <List.Item.Meta
                   avatar={<img width={100} height={100} src={item.pic} alt={item.name}/>}
-                  title={<div><p>{item.name}</p><p>{item.type}</p></div>}
+                  title={<span className={styles.dishname}>{item.name}</span>}
                   description={
-                    <div>
-                      <div>{item.desc}</div>
-                      <div><span style={{color:'red'}}>&yen;{item.price}</span></div>
+                    <div className={styles.desc}>
+                      <div className={styles.row1}>{item.desc}{item.type.name}</div>
+                      <div className={styles.row2}>月售:&nbsp;{item.saleCount}</div>
+                      <div className={styles.row3}>&yen;{item.price}</div>
                     </div>}
                 />
                 <div style={{display: item.num===0?'none':'inline'}}>剩余{item.num}份</div>
