@@ -27,6 +27,11 @@ function ChatPage({ dispatch , fetch, location, chat}) {
         type: 'chat/handleSend', //指定action,namespace+action
         msg: msg
       })
+    } else {
+      dispatch({
+        type : 'chat/handleVisibleChange', //指定action,namespace+action
+        visible:true
+      })
     }
   }
 
