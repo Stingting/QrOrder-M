@@ -25,88 +25,93 @@ export default {
 
   subscriptions: {
     setup({ dispatch, history }) {
-      return history.listen(({ pathname,search,params})=>{
+      return history.listen(({ pathname,search,params})=> {
 
         //进入聊天页面时触发的操作
-        if(pathname.includes('/app/v1/chat')) {
+        if (pathname.includes('/app/v1/chat')) {
           //当前聊天桌号
           curTableNum = params.tableId;
           //获取聊天室信息
           dispatch({type: 'getChatRoomInfo'});
           //获取聊天记录
-          dispatch({type: 'getChatRecord', tableNum:curTableNum});
+          dispatch({type: 'getChatRecord', tableNum: curTableNum});
           //进入聊天页面时清空当前桌的未读条数及减少总的未读数
           const count = getLocalStorage(`table/${curTableNum}`);
-          setLocalStorage(`table/${curTableNum}`,0);
+          setLocalStorage(`table/${curTableNum}`, 0);
           let tableTotalUnreadCount = getLocalStorage("tableTotalUnreadCount");
-          setLocalStorage("tableTotalUnreadCount",tableTotalUnreadCount-count);
+          setLocalStorage("tableTotalUnreadCount", tableTotalUnreadCount - count);
         }
+        if (getSessionStorage("merchantId") !== null && !mqttClient.isConnected()) {
+          const client = mqttClient.getInstance();
+          client.on('connect', function () {
+            //商家订阅本店所有台的聊天室信息
+            const topic = `orderSystem/${getSessionStorage("merchantId")}/+/chat`;
+            //商家订阅本店所有台的订单信息
+            const orderTopic = `orderSystem/${getSessionStorage("merchantId")}/+/order`;
+            console.log("connect to emqtt...");
+            client.subscribe(topic);
+            client.subscribe(orderTopic);
+            console.log(`订阅的聊天室主题：${topic}`);
+            console.log(`订阅的订单主题：${orderTopic}`);
+          });
+          client.on('reconnect', function () {
+            console.log('正在重连mqtt服务...')
+          });
 
-       if(getSessionStorage("merchantId")!==null) {
-         mqttClient.getInstance().on('connect', function () {
-           //商家订阅本店所有台的聊天室信息
-           const topic = `orderSystem/${getSessionStorage("merchantId")}/+/chat`;
-           //商家订阅本店所有台的订单信息
-           const orderTopic = `orderSystem/${getSessionStorage("merchantId")}/+/order`;
-           console.log("connect to emqtt...");
-           mqttClient.getInstance().subscribe(topic);
-           mqttClient.getInstance().subscribe(orderTopic);
-           console.log(`订阅的聊天室主题：${topic}`);
-           console.log(`订阅的订单主题：${orderTopic}`);
-           mqttClient.getInstance().on('message', function (topic, message) {
+          client.on('message', function (topic, message,payload) {
+            console.log(`收到消息。。。是否重复：dup=${payload.dup}`);
 
-             const match = pathToRegexp(`orderSystem/${getSessionStorage('merchantId')}/:tableNum/chat`).exec(topic);
-             if (match) {
-               console.log(`收到的聊天消息${message.toString()}`);
-               topicTableNum = match[match.length - 1];
+            const match = pathToRegexp(`orderSystem/${getSessionStorage('merchantId')}/:tableNum/chat`).exec(topic);
+            if (match) {
+              console.log(`收到的聊天消息${message.toString()}`);
+              topicTableNum = match[match.length - 1];
 
-               if (curTableNum === Number(topicTableNum)) {
-                 //设置聊天消息
-                 dispatch({type: 'setChatMessage', chatMsg: message.toString()});
-               } else {
-                 //缓存餐桌的未读数
-                 let tableUnreadCount = getLocalStorage(`table/${topicTableNum}`);
-                 //缓存餐桌的总的未读数
-                 let tableTotalUnreadCount = getLocalStorage("tableTotalUnreadCount");
-                 if (!isObject(tableUnreadCount)) {
-                   tableUnreadCount = 1;
-                 } else {
-                   tableUnreadCount += 1;
-                 }
-                 if (!isObject(tableTotalUnreadCount)) {
-                   tableTotalUnreadCount = 1;
-                 } else {
-                   tableTotalUnreadCount += 1;
-                 }
-                 setLocalStorage(`table/${topicTableNum}`, tableUnreadCount);
-                 setLocalStorage("tableTotalUnreadCount", tableTotalUnreadCount);
-               }
+              if (curTableNum === Number(topicTableNum)) {
+                //设置聊天消息
+                dispatch({type: 'setChatMessage', chatMsg: message.toString()});
+              } else {
+                //缓存餐桌的未读数
+                let tableUnreadCount = getLocalStorage(`table/${topicTableNum}`);
+                //缓存餐桌的总的未读数
+                let tableTotalUnreadCount = getLocalStorage("tableTotalUnreadCount");
+                if (!isObject(tableUnreadCount)) {
+                  tableUnreadCount = 1;
+                } else {
+                  tableUnreadCount += 1;
+                }
+                if (!isObject(tableTotalUnreadCount)) {
+                  tableTotalUnreadCount = 1;
+                } else {
+                  tableTotalUnreadCount += 1;
+                }
+                setLocalStorage(`table/${topicTableNum}`, tableUnreadCount);
+                setLocalStorage("tableTotalUnreadCount", tableTotalUnreadCount);
+              }
 
-             }
-             //获取订单信息
-             const orderTopicMatch = pathToRegexp(`orderSystem/${getSessionStorage('merchantId')}/:tableNum/order`).exec(topic);
-             if (orderTopicMatch) {
-               console.log(`收到的订单消息${message.toString()}`);
-               //设置新的订单信息
-               dispatch({type: 'setOrderMessage', orderMsg: message.toString()});
-               //弹出新订单信息框
-               dispatch({
-                 type: 'showOrderDialog',
-                 orderModalVisible: true
-               })
-             }
+            }
+            //获取订单信息
+            const orderTopicMatch = pathToRegexp(`orderSystem/${getSessionStorage('merchantId')}/:tableNum/order`).exec(topic);
+            if (orderTopicMatch) {
+              console.log(`收到的订单消息${message.toString()}`);
+              //设置新的订单信息
+              dispatch({type: 'setOrderMessage', orderMsg: message.toString()});
+              //弹出新订单信息框
+              dispatch({
+                type: 'showOrderDialog',
+                orderModalVisible: true
+              })
+            }
 
-           });
-         });
-       }
-        mqttClient.getInstance().on('close', function () {
-          console.log("emqtt closed...");
-        });
+          });
 
-        mqttClient.getInstance().on("error", function (error) {
-          console.log(error.toString());
-        });
+          client.on('close', function () {
+            console.log("emqtt closed...");
+          });
 
+          client.on("error", function (error) {
+            console.log(error.toString());
+          });
+        }
       });
     },
   },
