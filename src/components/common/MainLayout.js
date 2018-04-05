@@ -10,8 +10,8 @@ const {Content} = Layout;
 
 function MainLayout({dispatch, children, location,chat,loading}) {
 
-  //获取loading对象的global
-  const isLoading = loading.global;
+  //获取loading对象的global,聊天室页面不显示加载
+  const isLoading = loading.global && !loading.models.chat;
 
   /**
    * 订单弹框是否可见标识
