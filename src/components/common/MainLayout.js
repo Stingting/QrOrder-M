@@ -4,10 +4,14 @@ import {Badge, Layout, Modal} from 'antd';
 import styles from '../../assets/less/global.less';
 import {connect} from "dva";
 import OrderMsg from '../order/OrderMsg';
+import { ActivityIndicator } from 'antd-mobile';
 
 const {Content} = Layout;
 
-function MainLayout({dispatch, children, location,chat}) {
+function MainLayout({dispatch, children, location,chat,loading}) {
+
+  //获取loading对象的global
+  const isLoading = loading.global;
 
   /**
    * 订单弹框是否可见标识
@@ -41,11 +45,16 @@ function MainLayout({dispatch, children, location,chat}) {
           <OrderMsg orderMessages={orderMessages}/>
         </Modal>
       </Badge>
+      {/*全局正在加载组件*/}
+      {/*<ActivityIndicator toast text="" animating={isLoading}/>*/}
+      <ActivityIndicator toast animating={isLoading}/>
+
     </Layout>
+
   );
 }
-
-function mapStateToProps({chat}) {
-  return {chat};
+//loading对象为dva-loading组件的对象，处理effects请求的加载状态，全局的
+function mapStateToProps({chat,loading}) {
+  return {chat,loading};
 }
 export default connect(mapStateToProps)(MainLayout);

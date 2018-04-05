@@ -9,7 +9,6 @@ export default {
   state: {
     count:0, //个数
     tableList:[] ,//餐桌数组,
-    loading:false,
     visible:false,
     table:{},
     status:null,//当前餐桌的列表状态
@@ -37,10 +36,8 @@ export default {
   effects: {
     *getTableList({ status }, {select, call, put }) {
        const tableStatus =  yield select(state => state.dining.status);
-       yield put({type:'showLoading'});
        const {data} = yield call(getTableList, getSessionStorage("merchantId"),tableStatus);
        if(data) {
-         yield put({type:'hideLoading'});
          yield put({
            type:'showTableList',
            count:data.count,
@@ -129,14 +126,6 @@ export default {
     },
     showTableList(state, payload) {
       return { ...state, ...payload };
-    },
-    showLoading(state,payload) {
-      state.loading=true;
-      return {...state, ...payload};
-    },
-    hideLoading(state,payload) {
-      state.loading=false;
-      return {...state, ...payload};
     },
     closeDialog(state,payload) {
       state.visible = false;

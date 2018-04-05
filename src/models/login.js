@@ -1,6 +1,7 @@
 import {login} from "../services/merchant";
 import {getSessionStorage, setSessionStorage} from "../utils/helper";
 import {routerRedux} from 'dva/router';
+import {Toast} from 'antd-mobile';
 
 export default {
 
@@ -27,18 +28,27 @@ export default {
 
   effects: {
     *login({ payload }, { call, put }) {
-      const {data} = yield call(login, payload);
-      if(data) {
-        const token = data.authorization;
-        const head=data.head;
-        const merchantId = data.id;
-        const nickName=data.nickName;
-        setSessionStorage("token", token);
-        setSessionStorage("head", head);
-        setSessionStorage("merchantId", merchantId);
-        setSessionStorage("nickName", nickName);
-        //跳转到首页
-        yield put(routerRedux.push('/app/v1/mportal'));
+      const {data,err} = yield call(login, payload);
+      if(err) {
+        throw new Error(err.message);
+      } else {
+        if (data.msg) {
+          if (data.msg != "") {
+            Toast.info(data.msg);
+          }
+        }
+        else {
+          const token = data.authorization;
+          const head = data.head;
+          const merchantId = data.id;
+          const nickName = data.nickName;
+          setSessionStorage("token", token);
+          setSessionStorage("head", head);
+          setSessionStorage("merchantId", merchantId);
+          setSessionStorage("nickName", nickName);
+          //跳转到首页
+          yield put(routerRedux.push('/app/v1/mportal'));
+        }
       }
     },
     *toLoginPage({payload}, {call,put}) {

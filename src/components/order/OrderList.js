@@ -5,7 +5,7 @@ import moment from 'moment';
 import styles from './OrderList.less';
 import {Modal} from 'antd-mobile';
 
-const OrderList = ({loading,orderList,totalPerson,totalPrice,totalCount,orderData,visible,
+const OrderList = ({orderList,totalPerson,totalPrice,totalCount,orderData,visible,
                      toUpdateOrder,updateOrder,updateOrderStatus,closeDialog,toOrderDetail}) => {
 
   const action = (status,orderId,data) =>{
@@ -31,7 +31,6 @@ const OrderList = ({loading,orderList,totalPerson,totalPrice,totalCount,orderDat
         <List
           bordered
           split={true}
-          loading={loading}
           itemLayout="horizontal"
           dataSource={orderList}
           size="middle"

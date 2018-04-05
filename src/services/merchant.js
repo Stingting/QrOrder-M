@@ -2,17 +2,60 @@ import request from '../utils/request';
 import qs from 'qs';
 import {getSessionStorage, isObject} from "../utils/helper";
 
+
+export const ContentType = {
+  JSON : "application/json;charset=UTF-8",
+  FORM : "application/x-www-form-urlencoded; charset=UTF-8"
+};
+
+export const HttpMethod = {
+  GET : "GET",
+  POST : "POST",
+  PUT : "PUT",
+  PATCH : "PATCH",
+  DELETE : "DELETE",
+  OPTIONS : "OPTIONS"
+};
+
+/**
+ * 封装header
+ * @returns {{"Content-Type": string}}
+ */
+const getTokenHeaders = () => {
+    return {
+      authorization:getSessionStorage("token")
+    }
+};
+/**
+ *
+ * @returns {{"Content-Type": string, authorization}}
+ */
+const getTokenFormHeaders = () =>{
+  return {
+    "Content-Type": ContentType.FORM,
+    authorization:getSessionStorage("token")
+  }
+};
+
+/**
+ *
+ * @returns {{"Content-Type": string}}
+ */
+const getNoTokenFormHeader = () =>{
+  return {
+    "Content-Type": ContentType.FORM,
+  }
+};
+
 /**
  * 登录
  * @param params
  * @returns {Object}
  */
 export function login(params) {
-  return request('/v1/user/login', {
-    method:'POST',
-    headers:{
-      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
-    },
+  return request(`/v1/user/login`, {
+    method:HttpMethod.POST,
+    headers: getNoTokenFormHeader(),
     body:qs.stringify(params)
   })
 }
@@ -23,11 +66,9 @@ export function login(params) {
  * @returns {Object}
  */
 export function getMerchantInfo(merchantId) {
-  return request('/v1/home/'+ merchantId, {
-    method: 'GET',
-    headers: {
-      authorization:getSessionStorage("token")
-    }
+  return request(`/v1/home/${merchantId}`, {
+    method: HttpMethod.GET,
+    headers:getTokenHeaders()
   });
 }
 
@@ -45,10 +86,8 @@ export function getOrderList(merchantId,tableId) {
     path=`/v1/order/${merchantId}`;
   }
   return request(path, {
-    method:'GET',
-    headers: {
-      authorization:getSessionStorage("token")
-    }
+    method: HttpMethod.GET,
+    headers:getTokenHeaders()
   });
 }
 
@@ -60,10 +99,8 @@ export function getOrderList(merchantId,tableId) {
  */
 export function getTableOrderList(merchantId,tableNum) {
   return request(`/v1/order/${merchantId}/table/${tableNum}`, {
-    method:'get',
-    headers: {
-      authorization:getSessionStorage("token")
-    }
+    method: HttpMethod.GET,
+    headers:getTokenHeaders()
   })
 }
 
@@ -74,11 +111,8 @@ export function getTableOrderList(merchantId,tableNum) {
  */
 export function updateOrder(params) {
   return request(`/v1/order/${params.id}/${params.orderId}`, {
-    method:'PUT',
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-      authorization:getSessionStorage("token")
-    },
+    method:HttpMethod.PUT,
+    headers: getTokenFormHeaders(),
     body:qs.stringify(params)
   });
 }
@@ -91,11 +125,8 @@ export function updateOrder(params) {
  */
 export function updateOrderStatus(params) {
   return request(`/v1/order/${params.id}/status/${params.orderId}`, {
-    method:'PUT',
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-      authorization:getSessionStorage("token")
-    },
+    method:HttpMethod.PUT,
+    headers:getTokenFormHeaders(),
     body:qs.stringify(params)
   });
 }
@@ -103,10 +134,8 @@ export function updateOrderStatus(params) {
 //获取订单详情
 export function getOrderDetail(merchantId, orderId) {
   return request(`/v1/order/${merchantId}/${orderId}`, {
-    method : 'GET',
-    headers: {
-      authorization:getSessionStorage("token")
-    }
+    method : HttpMethod.GET,
+    headers:getTokenHeaders()
   })
 }
 
@@ -118,10 +147,8 @@ export function getOrderDetail(merchantId, orderId) {
  */
 export function getCustomerList(merchantId) {
   return request(`/v1/order/customer/${merchantId}`, {
-    method:'GET',
-    headers: {
-      authorization:getSessionStorage("token")
-    }
+    method : HttpMethod.GET,
+    headers:getTokenHeaders()
   });
 }
 
@@ -132,10 +159,8 @@ export function getCustomerList(merchantId) {
  */
 export function getMenuList(merchantId) {
   return request(`/v1/menu/${merchantId}`, {
-    method:'GET',
-    headers: {
-      authorization:getSessionStorage("token")
-    }
+    method : HttpMethod.GET,
+    headers:getTokenHeaders()
   });
 }
 
@@ -146,10 +171,8 @@ export function getMenuList(merchantId) {
  */
 export function getSaleoutMenu(merchantId) {
   return request(`/v1/menu/${merchantId}/saleout`, {
-    method:'GET',
-    headers: {
-      authorization:getSessionStorage("token")
-    }
+    method : HttpMethod.GET,
+    headers:getTokenHeaders()
   });
 }
 
@@ -161,10 +184,8 @@ export function getSaleoutMenu(merchantId) {
  */
 export function getMenuDetail(merchantId, foodId) {
   return request(`/v1/menu/${merchantId}/${foodId}`, {
-    method:'GET',
-    headers: {
-      authorization:getSessionStorage("token")
-    }
+    method : HttpMethod.GET,
+    headers:getTokenHeaders()
   });
 }
 
@@ -175,11 +196,8 @@ export function getMenuDetail(merchantId, foodId) {
  */
 export function saveFood(params) {
   return request(`/v1/menu/${params.id}`, {
-    method:'POST',
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-      authorization:getSessionStorage("token")
-    },
+    method:HttpMethod.POST,
+    headers:getTokenFormHeaders(),
     body:qs.stringify(params)
   });
 }
@@ -191,11 +209,8 @@ export function saveFood(params) {
  */
 export function updateFood(params) {
   return request(`/v1/menu/${params.id}/${params.foodId}`, {
-    method:'put',
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-      authorization:getSessionStorage("token")
-    },
+    method:HttpMethod.PUT,
+    headers:getTokenFormHeaders(),
     body:qs.stringify(params)
   });
 }
@@ -208,10 +223,8 @@ export function updateFood(params) {
  */
 export function deleteFood(foodId, merchantId) {
   return request(`/v1/menu/${merchantId}/${foodId}`, {
-    method:'delete',
-    headers: {
-      authorization:getSessionStorage("token")
-    }
+    method:HttpMethod.DELETE,
+    headers:getTokenHeaders()
   });
 }
 
@@ -229,10 +242,8 @@ export function getTableList(merchantId,status) {
     url = `/v1/table/${merchantId}`;
   }
   return request(url, {
-    method:'GET',
-    headers: {
-      authorization:getSessionStorage("token")
-    }
+    method:HttpMethod.GET,
+    headers:getTokenHeaders()
   });
 }
 
@@ -244,10 +255,8 @@ export function getTableList(merchantId,status) {
  */
 export function getTableDetail(merchantId, tableId) {
   return request(`/v1/table/${merchantId}/${tableId}`, {
-    method:'GET',
-    headers: {
-      authorization:getSessionStorage("token")
-    }
+    method:HttpMethod.GET,
+    headers:getTokenHeaders()
   });
 }
 
@@ -258,11 +267,8 @@ export function getTableDetail(merchantId, tableId) {
  */
 export function addTable(params) {
   return request(`/v1/table/${params.id}`, {
-    method:'POST',
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-      authorization:getSessionStorage("token")
-    },
+    method:HttpMethod.POST,
+    headers: getTokenFormHeaders(),
     body:qs.stringify(params)
   });
 }
@@ -275,10 +281,8 @@ export function addTable(params) {
  */
 export function deleteTable(merchantId, tableId) {
   return request(`/v1/table/${merchantId}/${tableId}`, {
-    method:'delete',
-    headers: {
-      authorization:getSessionStorage("token")
-    }
+    method:HttpMethod.DELETE,
+    headers:getTokenHeaders()
   });
 }
 
@@ -289,11 +293,8 @@ export function deleteTable(merchantId, tableId) {
  */
 export function updateTable(params) {
   return request(`/v1/table/${params.id}/${params.tableId}`, {
-    method:'put',
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-      authorization:getSessionStorage("token")
-    },
+    method:HttpMethod.PUT,
+    headers:getTokenFormHeaders(),
     body:qs.stringify(params)
   });
 }
@@ -306,10 +307,8 @@ export function updateTable(params) {
  */
 export function getChatRoomInfo(merchantId, tableNum) {
   return request(`/v1/table/${merchantId}/${tableNum}`, {
-    method: 'get',
-    headers:{
-      authorization:getSessionStorage("token")
-    }
+    method: HttpMethod.GET,
+    headers:getTokenHeaders()
   })
 }
 
@@ -321,10 +320,8 @@ export function getChatRoomInfo(merchantId, tableNum) {
  */
 export function getChatRecord(merchantId, tableNum) {
   return request(`/v1/chat/${merchantId}/table/${tableNum}`, {
-    method:'get',
-    headers:{
-      authorization:getSessionStorage("token")
-    }
+    method: HttpMethod.GET,
+    headers:getTokenHeaders()
   })
 }
 
@@ -338,10 +335,8 @@ export function uploadFile(params) {
   formData.append("file",params.file);
   formData.append("userId", params.userId);
   return request('/v1/upload', {
-    method:'OPTIONS',
-    headers:{
-      authorization: getSessionStorage("token")
-    },
+    method:HttpMethod.OPTIONS,
+    headers:getTokenHeaders(),
     body:formData
   })
 }
@@ -354,10 +349,8 @@ export function uploadFile(params) {
  */
 export function getClassifyList(merchantId) {
   return request(`/v1/classify/${merchantId}`, {
-    method:'GET',
-    headers: {
-      authorization:getSessionStorage("token")
-    }
+    method: HttpMethod.GET,
+    headers:getTokenHeaders()
   })
 }
 
@@ -368,11 +361,8 @@ export function getClassifyList(merchantId) {
  */
 export function addClassify(params) {
   return request(`/v1/classify/${params.id}`, {
-    method:'POST',
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-      authorization:getSessionStorage("token")
-    },
+    method:HttpMethod.POST,
+    headers: getTokenFormHeaders(),
     body:qs.stringify(params)
   });
 }
@@ -385,9 +375,7 @@ export function addClassify(params) {
  */
 export function deleteClassify(merchantId, classifyId) {
   return request(`/v1/classify/${merchantId}/${classifyId}`, {
-    method:'delete',
-    headers: {
-      authorization:getSessionStorage("token")
-    }
+    method:HttpMethod.DELETE,
+    headers:getTokenHeaders()
   })
 }

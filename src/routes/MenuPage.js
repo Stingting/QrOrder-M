@@ -7,8 +7,8 @@ import styles from '../assets/less/global.less';
 
 function MenuPage({ dispatch , fetch, location, menu}) {
 
-  const {menuList, loading,visible,food} = menu;
-  const menuListProps = {menuList, loading,visible,food};
+  const {menuList,visible,food} = menu;
+  const menuListProps = {menuList,visible,food};
 
   /**
    * 获取食物详情

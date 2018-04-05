@@ -11,7 +11,6 @@ export default {
       totalPrice:0,
       totalCount:0,
       orderList:[],
-      loading:false,
       orderData:{},
       visible:false,
       detail:{}, //订单详情
@@ -48,10 +47,8 @@ export default {
 
   effects: {
     *getOrderList({ tableId }, { call, put }) {
-        yield put({type:'showLoading'});
         const {data} = yield call(getOrderList,getSessionStorage("merchantId"),tableId);
         if(data) {
-          yield put({type:'hideLoading'});
           yield put({
             type:'showOrderList',
             orderList:data.data.list,
@@ -123,14 +120,6 @@ export default {
   reducers: {
     showOrderList(state, payload) {
       return { ...state, ...payload };
-    },
-    showLoading(state,payload) {
-      state.loading=true;
-      return {...state, ...payload};
-    },
-    hideLoading(state,payload) {
-      state.loading=false;
-      return {...state, ...payload};
     },
     closeDialog(state,payload) {
       state.visible = false;

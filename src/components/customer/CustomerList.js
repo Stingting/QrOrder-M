@@ -1,13 +1,12 @@
 import React from 'react';
 import {Avatar, List} from 'antd';
 
-const CustomerList = ({loading,customerList}) => {
+const CustomerList = ({customerList}) => {
   return (
       <div style={{paddingTop: 45,backgroundColor:'white'}}>
         <List
           bordered
           split={true}
-          loading={loading}
           itemLayout="horizontal"
           dataSource={customerList}
           size="middle"

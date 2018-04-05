@@ -7,8 +7,8 @@ import {NavBar} from 'antd-mobile';
 
 function CartPage({ dispatch , fetch, location, order}) {
 
-  const {orderList, loading,totalPerson,totalPrice,totalCount,orderData,visible} = order;
-  const orderListProps = {orderList, loading,totalPerson,totalPrice,totalCount,orderData,visible};
+  const {orderList,totalPerson,totalPrice,totalCount,orderData,visible} = order;
+  const orderListProps = {orderList,totalPerson,totalPrice,totalCount,orderData,visible};
 
   /**
    * 跳转修改订单页面

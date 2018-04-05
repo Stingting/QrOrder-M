@@ -3,6 +3,7 @@ import {Button, Form} from 'antd';
 import {ImagePicker, InputItem, List} from 'antd-mobile';
 import EditClassify from './EditClassify';
 import EditType from './EditType';
+import {compress} from '../../utils/ImageCompressUtil';
 
 const FormItem = Form.Item;
 
@@ -32,11 +33,22 @@ const EditFood = ({form:{getFieldDecorator,validateFields},
     if(type ==='remove') {
       changeFile('',type);
     }
-    else {
-      //改变文件
-      changeFile(files[0].file,type);
-      //上传
-      uploadFile();
+    else if(type==='add') {
+      //图片压缩
+      compress(files[0].file, 0.5, function (err, data) {
+        if (err) {
+          console.log(err.message);
+          return;
+        }
+        console.log(data);
+        //改变文件
+        changeFile(data,type);
+        //上传
+        uploadFile();
+      });
+
+    } else {
+      console.log(type);
     }
   }
   return (

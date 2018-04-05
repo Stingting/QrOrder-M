@@ -7,8 +7,8 @@ import {NavBar} from 'antd-mobile';
 
 function TablePage({dispatch,history,dining}) {
 
-  const {tableList,loading,visible,table} = dining;
-  const tableListProps = {tableList, loading,visible,table};
+  const {tableList,visible,table} = dining;
+  const tableListProps = {tableList,visible,table};
 
   /**
    * 编辑餐桌

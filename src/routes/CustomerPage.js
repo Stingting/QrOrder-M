@@ -6,8 +6,8 @@ import styles from '../assets/less/global.less';
 import {NavBar} from 'antd-mobile';
 
 function CustomerPage({ dispatch , fetch, location, customer}) {
-  const {customerList, loading} = customer;
-  const customerListProps = {customerList, loading};
+  const {customerList} = customer;
+  const customerListProps = {customerList};
   return (
     <MainLayout>
       <NavBar

@@ -3,6 +3,7 @@ import {
   deleteClassify, addClassify,getSaleoutMenu
 } from '../services/merchant';
 import {getSessionStorage} from "../utils/helper";
+import {Toast} from "antd-mobile/lib/index";
 
 export default {
 
@@ -11,7 +12,6 @@ export default {
   state: {
       count:0, //总数
       menuList:[], //食物列表
-      loading:false, //等待加载样式
       visible:false, //详情框是否可见
       food:{},//食物详情
       classify:[], //食物分类
@@ -39,12 +39,10 @@ export default {
 
   effects: {
     *getMenuList({ status }, { call, put }) {
-        yield put({type:'showLoading'});
         //查询售罄菜式
         if(status ===0) {
           const {data} = yield call(getSaleoutMenu, getSessionStorage("merchantId"));
           if (data) {
-            yield put({type: 'hideLoading'});
             yield put({
               type: 'showMenuList',
               menuList: data.data
@@ -54,7 +52,6 @@ export default {
         else {
           const {data} = yield call(getMenuList, getSessionStorage("merchantId"));
           if (data) {
-            yield put({type: 'hideLoading'});
             yield put({
               type: 'showMenuList',
               count: data.count,
@@ -124,12 +121,21 @@ export default {
         file:file,
         userId:getSessionStorage("merchantId")
       };
-      const {data} = yield call(uploadFile, params);
-      if(data) {
-        yield put({
-          type: 'changeFoodPic',
-          pic: data.name
-        })
+      const {data,err} = yield call(uploadFile, params);
+      if(err) {
+        throw new Error(err.message);
+      } else {
+        if (data.msg) {
+          if (data.msg != "") {
+            Toast.info(data.msg);
+          }
+        }
+        else {
+          yield put({
+            type: 'changeFoodPic',
+            pic: data.name
+          })
+        }
       }
     },
     *deleteFood({foodId},{call,put}) {
@@ -174,14 +180,6 @@ export default {
   reducers: {
     showMenuList(state, payload) {
       return { ...state, ...payload };
-    },
-    showLoading(state,payload) {
-      state.loading=true;
-      return {...state, ...payload};
-    },
-    hideLoading(state,payload) {
-      state.loading=false;
-      return {...state, ...payload};
     },
     closeDialog(state,payload) {
       state.visible = false;

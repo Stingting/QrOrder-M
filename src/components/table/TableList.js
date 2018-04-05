@@ -7,7 +7,7 @@ import {getLocalStorage} from "../../utils/helper";
 const operation = Modal.operation;
 const alert = Modal.alert;
 
-const TableList = ({tableList,loading,editTable,deleteTable,visible,table,closeDialog,saveTable,selectedTo}) => {
+const TableList = ({tableList,editTable,deleteTable,visible,table,closeDialog,saveTable,selectedTo}) => {
   function getActions(status,id) {
     if(status===1) {
       return [<a onClick={(e) => editTable(id,e)}><Icon type="edit" title="修改"/></a>,
@@ -36,7 +36,6 @@ const TableList = ({tableList,loading,editTable,deleteTable,visible,table,closeD
         <List
           bordered
           split={true}
-          loading={loading}
           itemLayout="horizontal"
           dataSource={tableList}
           size="middle"

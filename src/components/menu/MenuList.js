@@ -5,8 +5,8 @@ import EditFood from './EditFood';
 import styles from './MenuList.less';
 const alert = Modal.alert;
 
-const MenuList = ({menuList, loading,getMenuDetail,visible,food,
-                    closeDialog,saveFood,file,uploadLoading,changeFile,uploadFile,deleteFood}) => {
+const MenuList = ({menuList,getMenuDetail,visible,food,
+                    closeDialog,saveFood,file,changeFile,uploadFile,deleteFood}) => {
 
     // fix touch to scroll background page on iOS
    // https://github.com/ant-design/ant-design-mobile/issues/307
@@ -50,7 +50,6 @@ const MenuList = ({menuList, loading,getMenuDetail,visible,food,
         <WingBlank>
           <List
             split={true}
-            loading={loading}
             itemLayout="horizontal"
             dataSource={menuList}
             size="middle"
