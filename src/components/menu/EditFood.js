@@ -82,10 +82,20 @@ const EditFood = ({form:{getFieldDecorator,validateFields},
           <FormItem label="食物价格" {...formItemLayout}>
             <List>
             {getFieldDecorator('price', {
-              initialValue:food.price===undefined?0:food.price,
-              rules: [{ required: true, message: '请填写价格！' }],
+              initialValue:food.price,
+              rules: [{ required: true, message: '请输入食物价格！' }],
             })(
               <InputItem type='money' clear moneyKeyboardAlign="left" extra="¥"  placeholder="请输入食物价格"/>
+            )}
+            </List>
+          </FormItem>
+          <FormItem label="食物数量" {...formItemLayout}>
+            <List>
+            {getFieldDecorator('num', {
+              initialValue:food.num,
+              rules: [{ required: true, message: '请输入食物数量！' }],
+            })(
+              <InputItem type="digit" min={1} placeholder="请输入食物数量"/>
             )}
             </List>
           </FormItem>
