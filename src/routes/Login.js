@@ -17,6 +17,15 @@ function Login({ dispatch , fetch, location, login,form:{getFieldDecorator,valid
       }
     });
   }
+
+  /**
+   * 去注册
+   * */
+  function toRegister() {
+    dispatch({
+      type:'login/toRegisterPage',
+    })
+  }
   return (
    <div style={{textAlign:'center', margin:'0 auto'}}>
      <NavBar mode="light">二维码点餐商家版</NavBar>
@@ -35,6 +44,9 @@ function Login({ dispatch , fetch, location, login,form:{getFieldDecorator,valid
            <Input size='large' prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="请输入密码" />
          )}
        </FormItem>
+
+       <div style={{textAlign:'right', padding:10}}><span onClick={toRegister}>没有账号？点击注册账号</span></div>
+
        <FormItem>
         {/* {getFieldDecorator('remember', {
            valuePropName: 'checked',

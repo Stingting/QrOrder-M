@@ -1,5 +1,5 @@
 import {login} from "../services/merchant";
-import {getSessionStorage, setSessionStorage} from "../utils/helper";
+import {getSessionStorage, setSessionStorage,isObject} from "../utils/helper";
 import {routerRedux} from 'dva/router';
 import {Toast} from 'antd-mobile';
 
@@ -15,7 +15,7 @@ export default {
         if(pathname.includes('app')&&!pathname.includes('login')) {
           //验证是否已经登录
           const token = getSessionStorage("token");
-          if (token===undefined || token===null || token==='') {
+          if (!isObject(token)&&!pathname.includes('register')) {
             //跳转到登录页面
             dispatch({
               type:'toLoginPage'
@@ -54,6 +54,10 @@ export default {
     *toLoginPage({payload}, {call,put}) {
       //跳转到登录页面
       yield put(routerRedux.push('/app/v1/login'));
+    },
+    *toRegisterPage({payload}, {call, put}) {
+      //跳转到注册页面
+      yield put(routerRedux.push('/app/v1/register'));
     }
   },
 

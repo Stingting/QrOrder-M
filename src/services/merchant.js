@@ -48,6 +48,21 @@ const getNoTokenFormHeader = () =>{
 };
 
 /**
+ * 用户注册
+ * @param params
+ * @returns {Object}
+ */
+export function register(params) {
+  //角色，商家为2
+  params.role = 2;
+  return request(`/v1/user/register`, {
+    method:HttpMethod.POST,
+    headers: getNoTokenFormHeader(),
+    body:qs.stringify(params)
+  })
+}
+
+/**
  * 登录
  * @param params
  * @returns {Object}

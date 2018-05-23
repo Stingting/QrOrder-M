@@ -4,6 +4,7 @@ import IndexPage from './routes/IndexPage';
 import menu from './routes/MenuPage';
 import portal from './routes/MerchantPortal';
 import login from './routes/Login';
+import register from './routes/Register';
 import table from './routes/TablePage';
 import customer from './routes/CustomerPage';
 import setting from './routes/SettingPage';
@@ -20,6 +21,7 @@ function RouterConfig({ history })  {
         <Route path="/app/v1/menu" exact component={menu} />
         <Route path="/app/v1/mportal" exact component={portal} />
         <Route path="/app/v1/login" exact component={login} />
+        <Route path="/app/v1/register" exact component={register} />
         <Route path="/app/v1/table" exact component={table} />
         <Route path="/app/v1/customer" exact component={customer} />
         <Route path="/app/v1/setting" exact component={setting} />
