@@ -2,11 +2,11 @@ import dva from 'dva';
 import './index.css';
 import createLoading from 'dva-loading';
 import {Toast} from 'antd-mobile';
-import {browserHistory} from 'dva/router';
+import createHistory from 'history/createBrowserHistory';
 
 // 1. Initialize
 const app = dva({
-  history: browserHistory,
+  history: createHistory(),
   onError(e) {
     Toast.fail(e.message, 2); //全局错误提示
   }
@@ -23,6 +23,7 @@ app.model(require('./models/chat').default);
 app.model(require('./models/navigation').default);
 app.model(require('./models/order').default);
 app.model(require('./models/login').default);
+app.model(require('./models/register').default);
 app.model(require('./models/table').default);
 app.model(require('./models/customer').default);
 app.model(require('./models/setting').default);
